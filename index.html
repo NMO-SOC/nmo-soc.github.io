@@ -83,6 +83,21 @@
 
   .banner [title]{cursor:help}
 
+  .banner-now{
+    font-size:.86rem;
+    padding-bottom:.35rem;
+    margin-bottom:.35rem;
+    border-bottom:1px solid rgba(239,203,132,.28);
+  }
+  .banner-day{font-size:.74rem}
+
+  #clock{
+    color:var(--ochre);
+    letter-spacing:.09em;
+    font-variant-numeric:tabular-nums;
+    font-feature-settings:"tnum";
+  }
+
   /* numerals stand out in gold on the banner, in red on the plaster */
   .num{color:var(--num,var(--pompeian));letter-spacing:.05em}
   .banner{--num:var(--ochre)}
@@ -315,7 +330,13 @@
 <body>
 
 <header class="banner">
-  <div class="banner-inner" aria-label="Today's date in the Roman calendar">
+  <div class="banner-inner banner-now" aria-label="The time now, in Roman hours">
+    <span><time id="clock" title="The clock on this device, which the operating system keeps synchronised to network time.">--:--:--</time></span>
+    <span lang="la" id="hora" title="The hour of the natural day: sunrise to sunset divided into twelve, and the night likewise.">&mdash;</span>
+    <span lang="la" id="pars-diei" title="The division of the civil day, midnight to midnight, by its old Latin name.">&mdash;</span>
+  </div>
+
+  <div class="banner-inner banner-day" aria-label="Today's date in the Roman calendar">
     <span lang="la" id="roman-date">&mdash;</span>
     <span lang="la"><span id="auc-year">&mdash;</span> A.U.C.</span>
     <span lang="la" title="The sun's place in the zodiac, reckoned as Pliny and Columella reckoned it, with the equinox falling in the eighth degree of Aries.">Sol <span id="sol-signum">&mdash;</span></span>
@@ -391,6 +412,22 @@
       </div>
 
       <div>
+        <dt>Horae</dt>
+        <dd lang="la">Dies naturalis a solis ortu ad occasum patet, in duodecim horas divisus; nox pariter. Horae igitur aestate longiores sunt, hieme breviores. Dicitur ergo <em>hora prima diei</em> aut <em>hora prima noctis</em>. Ortus occasusque ad Melburnam computantur.
+        <span class="formula">(tempus ab ortu) per XII partes aequas</span></dd>
+        <dd lang="en">The natural day runs from sunrise to sunset and is cut into twelve hours; the night likewise. The hours are therefore long in summer and short in winter &mdash; on a July evening here an hour of the night runs about seventy minutes. Sunrise and sunset are computed for Melbourne.
+        <span class="formula">(time since sunrise) &divide; daylight &times; 12</span></dd>
+      </div>
+
+      <div>
+        <dt>Partes diei</dt>
+        <dd lang="la">Dies civilis a media nocte ad mediam noctem sedecim partes habet, quas veteres nominibus, non numeris, distinxerunt: quattuor diei, duodecim noctis. Quoniam nulla tempora certa traduntur, hic ad solis ortum et occasum mediamque noctem accommodantur.
+        <span class="formula">vespere in VII, matutino in V partes; dies ita ut Meridies medium teneat</span></dd>
+        <dd lang="en">The civil day, midnight to midnight, carries sixteen named divisions &mdash; four across the daylight, twelve across the night. The sources give the names and their order but no clock times, so they are fitted to the sun here: sunset to midnight in sevenths, midnight to sunrise in fifths, and the daylight split so that <em>Meridies</em> straddles solar noon.
+        <span class="formula">Solis occasus &rarr; Vespera &rarr; Crepusculum &rarr; Prima fax &rarr; Concubia nox &rarr; Intempesta nox &rarr; Inclinatio ad mediam noctem &rarr; Media nox &rarr; Mediae noctis inclinatio &rarr; Gallicinium &rarr; Conticinium &rarr; Diluculum &rarr; Mane &rarr; Antemeridianum tempus &rarr; Meridies &rarr; Tempus pomeridianum</span></dd>
+      </div>
+
+      <div>
         <dt>Dies</dt>
         <dd lang="la">Septem dies planetarum: dies Solis, Lunae, Martis, Mercurii, Jovis, Veneris, Saturni.</dd>
         <dd lang="en">The seven planetary days, running from <em>Dies Solis</em> through <em>Lunae</em>, <em>Martis</em>, <em>Mercurii</em>, <em>Jovis</em> and <em>Veneris</em> to <em>Dies Saturni</em>.</dd>
@@ -457,6 +494,15 @@
   // Capricorn and Cancer, not the first. Their signs therefore begin about
   // a week earlier than the modern ones. Set to 0 for modern reckoning.
   var ZODIAC_OFFSET = 7;
+
+  // Sunrise and sunset are needed for the Roman hours. Melbourne.
+  var LATITUDE  = -37.8136;
+  var LONGITUDE = 144.9631;
+
+  // Seconds added to the device clock, which the operating system already
+  // keeps synchronised to network time. Set this to 37 to show TAI, the
+  // atomic timescale, which currently runs 37 seconds ahead of UTC.
+  var CLOCK_OFFSET = 0;
 
   /* ============================================================
      The Roman calendar, after the tables at
@@ -545,6 +591,116 @@
   }
 
   /* ============================================================
+     The hours of the natural day, and the divisions of the civil day
+
+     The natural day (dies naturalis) runs sunrise to sunset and is cut
+     into twelve hours; the night likewise. The hours are therefore long
+     in summer and short in winter.
+
+     The civil day (dies civilis) runs midnight to midnight and carries
+     sixteen named divisions. The sources give their names and their order
+     but no clock times, so they are fitted here to the sun: four across
+     the daylight, seven from sunset to midnight, five from midnight to
+     sunrise.
+     ============================================================ */
+
+  var ORDINALS = ['prima','secunda','tertia','quarta','quinta','sexta',
+                  'septima','octava','nona','decima','undecima','duodecima'];
+
+  // sunset -> midnight
+  var VESPERTINA = ['Solis occasus', 'Vespera', 'Crepusculum', 'Prima fax',
+                    'Concubia nox', 'Intempesta nox', 'Inclinatio ad mediam noctem'];
+
+  // midnight -> sunrise
+  var MATUTINA = ['Media nox', 'Mediae noctis inclinatio', 'Gallicinium',
+                  'Conticinium', 'Diluculum'];
+
+  var sunCache = {};
+
+  // Sunrise and sunset by the standard sunrise equation.
+  function sunTimes(date) {
+    var key = date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate();
+    if (sunCache[key] !== undefined) return sunCache[key];
+
+    var RAD = Math.PI / 180, DEG = 180 / Math.PI,
+        noon = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12),
+        jd = noon.getTime() / 86400000 + 2440587.5,
+        n = Math.round(jd - 2451545.0 + 0.0008),
+        Js = n - LONGITUDE / 360,
+        M = (357.5291 + 0.98560028 * Js) % 360,
+        C = 1.9148 * Math.sin(M * RAD) + 0.0200 * Math.sin(2 * M * RAD)
+            + 0.0003 * Math.sin(3 * M * RAD),
+        lam = (M + C + 180 + 102.9372) % 360,
+        Jt = 2451545.0 + Js + 0.0053 * Math.sin(M * RAD) - 0.0069 * Math.sin(2 * lam * RAD),
+        sinDec = Math.sin(lam * RAD) * Math.sin(23.4397 * RAD),
+        dec = Math.asin(sinDec),
+        cosW = (Math.sin(-0.833 * RAD) - Math.sin(LATITUDE * RAD) * sinDec)
+               / (Math.cos(LATITUDE * RAD) * Math.cos(dec)),
+        w, out;
+
+    if (cosW > 1 || cosW < -1) {      // the sun neither rises nor sets
+      out = null;
+    } else {
+      w = Math.acos(cosW) * DEG;
+      out = {
+        rise: new Date((Jt - w / 360 - 2440587.5) * 86400000),
+        set:  new Date((Jt + w / 360 - 2440587.5) * 86400000)
+      };
+    }
+    sunCache[key] = out;
+    return out;
+  }
+
+  function midnightOf(d, offset) {
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate() + (offset || 0));
+  }
+
+  function slot(list, t, from, to) {
+    var i = Math.floor((t - from) / (to - from) * list.length);
+    return list[Math.max(0, Math.min(list.length - 1, i))];
+  }
+
+  function horae(now) {
+    var today = sunTimes(now), t, f, prevSet, nextRise, mid, other;
+    if (!today) return null;
+    t = now.getTime();
+
+    // daylight: sunrise to sunset
+    if (t >= today.rise.getTime() && t < today.set.getTime()) {
+      f = (t - today.rise) / (today.set - today.rise);
+      return {
+        hora: 'Hora ' + ORDINALS[Math.min(11, Math.floor(f * 12))] + ' diei',
+        pars: f < 0.25 ? 'Mane'
+            : f < 0.45 ? 'Antemeridianum tempus'
+            : f < 0.55 ? 'Meridies'
+            : 'Tempus pomeridianum'
+      };
+    }
+
+    // night: the previous sunset to the next sunrise
+    if (t < today.rise.getTime()) {
+      other = sunTimes(midnightOf(now, -1));
+      prevSet = other && other.set;
+      nextRise = today.rise;
+      mid = midnightOf(now, 0);
+    } else {
+      other = sunTimes(midnightOf(now, 1));
+      prevSet = today.set;
+      nextRise = other && other.rise;
+      mid = midnightOf(now, 1);
+    }
+    if (!prevSet || !nextRise) return null;
+
+    f = (t - prevSet) / (nextRise - prevSet);
+    return {
+      hora: 'Hora ' + ORDINALS[Math.min(11, Math.floor(f * 12))] + ' noctis',
+      pars: t < mid.getTime()
+            ? slot(VESPERTINA, t, prevSet.getTime(), mid.getTime())
+            : slot(MATUTINA, t, mid.getTime(), nextRise.getTime())
+    };
+  }
+
+  /* ============================================================
      The computus, following the formulae at
      calculus-temporum-romanorum-a0a9d6.gitlab.io
      ============================================================ */
@@ -616,9 +772,25 @@
     }
   }
 
-  render();
-  // Keep the banner honest if the page is left open past midnight.
-  setInterval(render, 60000);
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+
+  function tick() {
+    var now = new Date(Date.now() + CLOCK_OFFSET * 1000),
+        clock = document.getElementById('clock'),
+        h = horae(now);
+
+    if (clock) {
+      clock.textContent = pad(now.getHours()) + ':' + pad(now.getMinutes())
+                        + ':' + pad(now.getSeconds());
+    }
+    set('hora', h ? h.hora : '\u2014');
+    set('pars-diei', h ? h.pars : '\u2014');
+
+    render();   // returns immediately unless the date has turned over
+  }
+
+  tick();
+  setInterval(tick, 1000);
 
   // Latin or English for the notes at the foot of the page.
   var toggle = document.getElementById('lang-toggle');
