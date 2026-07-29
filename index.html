@@ -6,6 +6,17 @@
 <title>NMO-SOC</title>
 <meta name="description" content="Guides, tools and resources for English and Humanities.">
 <meta name="theme-color" content="#8E3122">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="NMO-SOC">
+<meta property="og:url" content="https://nmo-soc.github.io/">
+<meta property="og:title" content="NMO-SOC">
+<meta property="og:description" content="Guides, tools and resources for English and Humanities.">
+<meta property="og:image" content="https://nmo-soc.github.io/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="NMO-SOC, with the day's date in the Roman calendar.">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23E8DFC8'/%3E%3Cpath d='M16 5C12 10 5 11 5 16c0 4 4 5 6 3-1 3 1 5 5 8 4-3 6-5 5-8 2 2 6 1 6-3 0-5-7-6-11-11z' fill='%238E3122'/%3E%3C/svg%3E">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -336,6 +347,7 @@
   <div class="banner-inner banner-now" aria-label="The time now, in Roman hours">
     <span title="International Atomic Time, 37 seconds ahead of UTC, shown at the local offset."><span class="lbl">TAI</span><time id="clock"><span id="clock-hms">--:--:--</span><span id="clock-ms">.---</span></time></span>
     <span lang="la" id="hora" title="The hour of the natural day: sunrise to sunset divided into twelve, and the night likewise.">&mdash;</span>
+    <span lang="la" id="vigilia" title="The watch of the night: sunset to sunrise divided into four. Shown only after dark.">&mdash;</span>
     <span lang="la" id="pars-diei" title="The division of the civil day, midnight to midnight, by its old Latin name.">&mdash;</span>
   </div>
 
@@ -344,6 +356,7 @@
     <span lang="la"><span id="auc-year">&mdash;</span> A.U.C.</span>
     <span lang="la" title="The sun's place in the zodiac, reckoned as Pliny and Columella reckoned it, with the equinox falling in the eighth degree of Aries.">Sol <span id="sol-signum">&mdash;</span></span>
     <span lang="la" id="latin-weekday">&mdash;</span>
+    <span title="Nundinal letter: the eight-day market cycle, lettered A to H from 1 January."><span class="lbl">Nundinae</span><span id="c-nundinae">&mdash;</span></span>
     <span title="Golden Number: the year's place in the 19-year lunar cycle."><span class="lbl">Aureus Numerus</span><span id="c-aureus">&mdash;</span></span>
     <span title="Epact: the age of the moon on 1 January. Thirty is written as an asterisk."><span class="lbl">Epacta</span><span id="c-epacta">&mdash;</span></span>
     <span title="Roman Indiction: a 15-year civil cycle used for dating documents."><span class="lbl">Indictio</span><span id="c-indictio">&mdash;</span></span>
@@ -372,7 +385,7 @@
     </a>
     <!-- ===== to here, and change the href, name, note and tag ===== -->
 
-    <a class="panel" href="https://nmo-soc.github.io/exam-timer/">
+    <a class="panel" href="/exam-timer/">
       <span class="panel-name">Assessment Timer</span>
       <span class="panel-note">Reading and writing time on one locked screen, with the start and finish clocks showing.</span>
       <span class="panel-tag">Exam room</span>
@@ -419,6 +432,22 @@
         <span class="formula">(tempus ab ortu) per XII partes aequas</span></dd>
         <dd lang="en">The natural day runs from sunrise to sunset and is cut into twelve hours; the night likewise. The hours are therefore long in summer and short in winter &mdash; on a July evening here an hour of the night runs about seventy minutes. Sunrise and sunset are computed for Melbourne.
         <span class="formula">(time since sunrise) &divide; daylight &times; 12</span></dd>
+      </div>
+
+      <div>
+        <dt>Vigiliae</dt>
+        <dd lang="la">Nox a solis occasu ad ortum in quattuor vigilias aequas dividitur: prima, secunda, tertia, quarta. Sic excubiae agebantur. Interdiu nihil ostenditur.
+        <span class="formula">(tempus ab occasu) per IV partes aequas</span></dd>
+        <dd lang="en">The night, sunset to sunrise, in four equal watches &mdash; how the guard was set, running alongside the twelve hours of the night. Nothing is shown during daylight.
+        <span class="formula">(time since sunset) &divide; night &times; 4</span></dd>
+      </div>
+
+      <div>
+        <dt>Nundinae</dt>
+        <dd lang="la">Mercatus, quem Romani nono quoque die numerabant &mdash; re vera octavo. Litterae A ad H diebus in fastis adscribebantur, a Kalendis Januariis semper ab A incipientes. Quae littera mercatum ipsum ferret, per annos mutabatur.
+        <span class="formula">(dies anni) per VIII: A, B, C ... H</span></dd>
+        <dd lang="en">The market cycle, which the Romans counted inclusively as every ninth day and we would call every eighth. Their calendars lettered the days A to H, beginning again at A on 1 January, which is what this shows. Which letter carried the market varied from year to year and is not recoverable now.
+        <span class="formula">(day of the year) mod 8 &rarr; A, B, C &hellip; H</span></dd>
       </div>
 
       <div>
@@ -712,6 +741,21 @@
   var MATUTINA = ['Media nox', 'Mediae noctis inclinatio', 'Gallicinium',
                   'Conticinium', 'Diluculum'];
 
+  // the four watches into which the night was divided for the guard
+  var VIGILIAE = ['Prima vigilia', 'Secunda vigilia',
+                  'Tertia vigilia', 'Quarta vigilia'];
+
+  // The nundinal cycle: eight days lettered A to H, restarting at A on
+  // 1 January as the letters stood in the Roman fasti. Which letter
+  // carried the market itself shifted from year to year.
+  var NUNDINAL = 'ABCDEFGH';
+
+  function nundinalLetter(d) {
+    var days = Math.round((Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())
+                         - Date.UTC(d.getFullYear(), 0, 1)) / 86400000);
+    return NUNDINAL.charAt(days % 8);
+  }
+
   var sunCache = {};
 
   // Sunrise and sunset by the standard sunrise equation.
@@ -767,6 +811,7 @@
       f = (t - today.rise) / (today.set - today.rise);
       return {
         hora: 'Hora ' + ORDINALS[Math.min(11, Math.floor(f * 12))] + ' diei',
+        vigilia: null,                       // the watches belong to the night
         pars: f < 0.25 ? 'Mane'
             : f < 0.45 ? 'Antemeridianum tempus'
             : f < 0.55 ? 'Meridies'
@@ -791,6 +836,7 @@
     f = (t - prevSet) / (nextRise - prevSet);
     return {
       hora: 'Hora ' + ORDINALS[Math.min(11, Math.floor(f * 12))] + ' noctis',
+      vigilia: VIGILIAE[Math.min(3, Math.floor(f * 4))],
       pars: t < mid.getTime()
             ? slot(VESPERTINA, t, prevSet.getTime(), mid.getTime())
             : slot(MATUTINA, t, mid.getTime(), nextRise.getTime())
@@ -834,6 +880,13 @@
     if (el) el.innerHTML = rubricate(text);
   }
 
+  // C and D are Roman numerals as well as nundinal letters, so this one
+  // goes in as plain text and escapes the rubricator.
+  function setText(id, text) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = text;
+  }
+
   function render() {
     var now = new Date(trueNow()),
         y = now.getFullYear(),
@@ -854,6 +907,7 @@
     set('auc-year', roman(aucYear));
     set('sol-signum', signum(now));
     set('latin-weekday', WEEKDAYS[now.getDay()]);
+    setText('c-nundinae', nundinalLetter(now));
     set('c-aureus', roman(goldenNumber(y)));
     set('c-epacta', e === 0 ? '*' : roman(e));
     set('c-indictio', roman(indiction(y)));
@@ -863,7 +917,8 @@
   function pad(n) { return (n < 10 ? '0' : '') + n; }
   function pad3(n) { return (n < 10 ? '00' : n < 100 ? '0' : '') + n; }
 
-  var elClock, elHms, elMs, lastHms = '', lastPars = '', lastHora = '';
+  var elClock, elHms, elMs, elVigilia;
+  var lastHms = '', lastPars = '', lastHora = '', lastVigilia = '';
 
   function tick() {
     var stamp = trueNow(),
@@ -892,6 +947,16 @@
     if (h && h.hora !== lastHora) { set('hora', h.hora); lastHora = h.hora; }
     if (h && h.pars !== lastPars) { set('pars-diei', h.pars); lastPars = h.pars; }
 
+    if (elVigilia) {
+      if (h && h.vigilia) {
+        elVigilia.style.display = '';
+        if (h.vigilia !== lastVigilia) { set('vigilia', h.vigilia); lastVigilia = h.vigilia; }
+      } else {
+        elVigilia.style.display = 'none';
+        lastVigilia = '';
+      }
+    }
+
     render();   // returns immediately unless the date has turned over
   }
 
@@ -906,6 +971,7 @@
   elClock = document.getElementById('clock');
   elHms = document.getElementById('clock-hms');
   elMs = document.getElementById('clock-ms');
+  elVigilia = document.getElementById('vigilia');
 
   tick();
   if (window.requestAnimationFrame) {
