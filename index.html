@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NMO-SOC</title>
+<meta name="description" content="Guides, tools and resources for English and Humanities.">
+<meta name="theme-color" content="#E5E1D6">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23E5E1D6'/%3E%3Cpath d='M16 9l4 7-4 7-4-7z' fill='%23A63A24'/%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    /* Limestone, the shadow inside a carved letter, and minium — the red
+       lead with which the letters of a Roman inscription were painted. */
+    --stone:#E5E1D6;
+    --ink:#2B2620;
+    --ink-soft:#5F5952;
+    --rule:#CBC4B4;
+    --minium:#A63A24;
+    --caps:"Cinzel",Georgia,serif;
+    --text:"EB Garamond",Georgia,serif;
+  }
+
+  *,*::before,*::after{box-sizing:border-box}
+
+  html{color-scheme:light}
+
+  body{
+    margin:0;
+    background:var(--stone);
+    color:var(--ink);
+    font-family:var(--text);
+    font-size:19px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ---- the sheet: content sits to the right of a ruled margin ---- */
+  .sheet{
+    max-width:62rem;
+    margin:0 auto;
+    padding:clamp(3rem,9vw,5.5rem) 2rem 5rem 12rem;
+    background-image:linear-gradient(var(--rule),var(--rule));
+    background-repeat:no-repeat;
+    background-size:1px 100%;
+    background-position:10.5rem 0;
+  }
+
+  /* ---- anything set out in the ruled margin ---- */
+  .margin-note{
+    position:absolute;
+    left:-12rem;
+    width:9.75rem;
+    text-align:right;
+    font-family:var(--caps);
+    font-weight:400;
+    font-size:.66rem;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+
+  /* ---- titulus: the inscribed heading ---- */
+  .titulus{
+    margin:0 0 clamp(2.25rem,5vw,3rem);
+    padding-bottom:1.1rem;
+    border-bottom:1px solid var(--rule);
+    font-family:var(--caps);
+    font-weight:600;
+    font-size:clamp(1.45rem,4.2vw,2.15rem);
+    line-height:1.2;
+    letter-spacing:.3em;
+    color:var(--minium);
+  }
+
+  /* ---- numerals are rubricated, as in a ruled manuscript ---- */
+  .num{color:var(--minium);letter-spacing:.04em}
+
+  /* ---- the dateline ---- */
+  /* ---- the dateline: a compact strip, deliberately small ---- */
+  .fasti{position:relative;margin:0 0 clamp(1.75rem,4.5vw,2.5rem)}
+  .fasti .margin-note{margin:.2rem 0 0}
+
+  .fasti-primary{
+    font-size:1.15rem;
+    line-height:1.4;
+    margin:0 0 .15rem;
+  }
+
+  .fasti-secondary{
+    margin:0 0 .45rem;
+    font-size:.85rem;
+    line-height:1.5;
+    color:var(--ink-soft);
+  }
+  .fasti-secondary [title]{cursor:help}
+
+  .sep{color:var(--rule);padding:0 .3em}
+
+  .computus{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.1rem .9rem;
+    margin:0;
+    padding:0;
+  }
+  .computus > div{display:flex;align-items:baseline;gap:.35rem}
+  .computus dt{
+    font-family:var(--caps);
+    font-size:.55rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin:0;
+  }
+  .computus dd{
+    margin:0;
+    font-size:.82rem;
+    line-height:1.45;
+    color:var(--minium);
+    letter-spacing:.04em;
+  }
+
+  /* ---- statement of purpose ---- */
+  .thesis{
+    font-weight:400;
+    font-size:clamp(1.3rem,3.1vw,1.7rem);
+    line-height:1.28;
+    margin:0 0 .45rem;
+    max-width:26ch;
+  }
+
+  .lede{
+    margin:0 0 clamp(2.25rem,5.5vw,3.25rem);
+    max-width:44ch;
+    color:var(--ink-soft);
+    font-size:.97rem;
+  }
+
+  /* ---- shelves ---- */
+  .shelf{position:relative;margin-bottom:clamp(3rem,7vw,4.5rem)}
+  .shelf .margin-note{margin:.7rem 0 0}
+
+  .entry{
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:.1rem 1.5rem;
+    align-items:baseline;
+    padding:clamp(1.8rem,4vw,2.6rem) 0;
+    border-top:1px solid var(--rule);
+    text-decoration:none;
+    color:inherit;
+    transition:border-color .3s;
+  }
+  .shelf .entry:last-child{border-bottom:1px solid var(--rule)}
+
+  .entry-name{
+    font-size:clamp(1.85rem,5vw,2.8rem);
+    font-weight:500;
+    line-height:1.12;
+    letter-spacing:-.015em;
+    transition:color .3s;
+  }
+
+  .entry-arrow{
+    font-size:1.6rem;
+    color:var(--ink-soft);
+    transition:transform .3s cubic-bezier(.2,.7,.3,1),color .3s;
+  }
+
+  .entry-note{
+    grid-column:1/2;
+    margin-top:.5rem;
+    color:var(--ink-soft);
+    font-size:1.02rem;
+    max-width:50ch;
+  }
+
+  .entry-tag{
+    grid-column:2/3;
+    font-family:var(--caps);
+    font-size:.6rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    white-space:nowrap;
+  }
+
+  .entry:hover,
+  .entry:focus-visible{border-top-color:var(--minium)}
+  .entry:hover .entry-name,
+  .entry:focus-visible .entry-name,
+  .entry:hover .entry-arrow,
+  .entry:focus-visible .entry-arrow{color:var(--minium)}
+  .entry:hover .entry-arrow,
+  .entry:focus-visible .entry-arrow{transform:translateX(.35rem)}
+
+  .entry:focus-visible{outline:2px solid var(--ink);outline-offset:8px}
+
+  /* ---- ratio calculandi: how the dateline is worked out ---- */
+  .ratio-section{
+    margin-top:clamp(2rem,5vw,3rem);
+    padding-top:1.4rem;
+    border-top:1px solid var(--rule);
+  }
+  .ratio-section > summary{
+    list-style:none;
+    cursor:pointer;
+    font-family:var(--caps);
+    font-size:.6rem;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    transition:color .3s;
+  }
+  .ratio-section > summary::-webkit-details-marker{display:none}
+  .ratio-section > summary::after{content:" +";color:var(--minium)}
+  .ratio-section[open] > summary::after{content:" \2013"}
+  .ratio-section > summary:hover,
+  .ratio-section > summary:focus-visible{color:var(--minium)}
+  .ratio-section[open] > summary{margin-bottom:1.7rem}
+
+  .ratio-intro{
+    margin:0 0 1.1rem;
+    max-width:46ch;
+    font-size:1rem;
+    color:var(--ink-soft);
+  }
+
+  .ratio{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));
+    gap:1.85rem 2.75rem;
+    margin:0;
+  }
+  .ratio dt{
+    font-family:var(--caps);
+    font-size:.6rem;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    margin:0 0 .45rem;
+  }
+  .ratio dd{
+    margin:0;
+    font-size:.94rem;
+    line-height:1.55;
+    color:var(--ink-soft);
+  }
+  .formula{
+    display:block;
+    margin-top:.45rem;
+    font-style:italic;
+    color:var(--ink);
+  }
+
+  .ratio-source{
+    margin:2.5rem 0 0;
+    font-size:.85rem;
+    color:var(--ink-soft);
+  }
+  .ratio-source a{color:var(--ink-soft);text-underline-offset:.2em}
+
+  /* Latin is shown by default; the toggle swaps in the English. */
+  .ratio-section [lang="en"]{display:none}
+  body[data-ratio="en"] .ratio-section [lang="en"]{display:block}
+  body[data-ratio="en"] .ratio-section [lang="la"]{display:none}
+
+  .lang-toggle{
+    display:inline-block;
+    margin:0 0 2rem;
+    padding:0 0 .2rem;
+    border:0;
+    border-bottom:1px solid var(--rule);
+    background:none;
+    font-family:var(--caps);
+    font-size:.58rem;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    cursor:pointer;
+    transition:color .3s,border-color .3s;
+  }
+  .lang-toggle:hover,
+  .lang-toggle:focus-visible{color:var(--minium);border-bottom-color:var(--minium)}
+  .lang-toggle:focus-visible{outline:2px solid var(--ink);outline-offset:6px}
+
+  /* ---- the page settles into place, quietly ---- */
+  .rise{animation:rise .8s cubic-bezier(.2,.7,.3,1) both}
+  .rise-2{animation-delay:.12s}
+  .rise-3{animation-delay:.24s}
+  @keyframes rise{from{opacity:0;transform:translateY(.6rem)}to{opacity:1;transform:none}}
+
+  /* ---- narrow screens: the ruled margin folds away ---- */
+  @media (max-width:760px){
+    .sheet{
+      padding:2.5rem 1.35rem 3.5rem;
+      background-image:none;
+    }
+    .margin-note{
+      position:static;
+      width:auto;
+      text-align:left;
+      margin:0 0 .9rem!important;
+    }
+    .titulus{letter-spacing:.22em}
+    .entry{grid-template-columns:1fr;gap:.3rem}
+    .entry-arrow{display:none}
+    .entry-tag{grid-column:1/2}
+    .thesis{max-width:none}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition-duration:.001ms!important}
+  }
+</style>
+</head>
+
+<body>
+<div class="sheet">
+
+  <header>
+
+    <h1 class="titulus rise">NMO &middot; SOC</h1>
+
+    <section class="fasti rise rise-2" aria-label="Today's date in the Roman calendar">
+      <p class="margin-note">Hodie</p>
+
+      <p class="fasti-primary" lang="la"><span id="roman-date">&mdash;</span><span class="sep">&middot;</span>Anno ab Urbe Condita <span id="auc-year">&mdash;</span></p>
+
+      <p class="fasti-secondary"><span lang="la" title="The sun's place in the zodiac, reckoned as Pliny and Columella reckoned it, with the equinox falling in the eighth degree of Aries.">Sol <span id="sol-signum">&mdash;</span></span><span class="sep">&middot;</span><span lang="la" id="latin-weekday">&mdash;</span><span class="sep">&middot;</span><time id="civil-date"></time></p>
+
+      <dl class="computus">
+        <div>
+          <dt title="Golden Number: the year's place in the 19-year lunar cycle.">Aureus Numerus</dt>
+          <dd id="c-aureus">&mdash;</dd>
+        </div>
+        <div>
+          <dt title="Epact: the age of the moon on 1 January. Thirty is written as an asterisk.">Epacta</dt>
+          <dd id="c-epacta">&mdash;</dd>
+        </div>
+        <div>
+          <dt title="Roman Indiction: a 15-year civil cycle used for dating documents.">Indictio Romana</dt>
+          <dd id="c-indictio">&mdash;</dd>
+        </div>
+        <div>
+          <dt title="Solar Cycle: the 28-year period after which the weekdays fall on the same dates.">Cyclus Solaris</dt>
+          <dd id="c-cyclus">&mdash;</dd>
+        </div>
+      </dl>
+    </section>
+
+    <div class="rise rise-3">
+      <p class="thesis">Guides, tools and resources for English.</p>
+      <p class="lede">Built for my classes, and free for anyone else who finds them useful.</p>
+    </div>
+
+  </header>
+
+  <main>
+
+    <section class="shelf">
+      <h2 class="margin-note">Guides</h2>
+
+      <!-- ===== To add an entry, copy one block from here ===== -->
+      <a class="entry" href="/VCE-English-Guide/">
+        <span class="entry-name">VCE English Guide</span>
+        <span class="entry-arrow" aria-hidden="true">&rarr;</span>
+        <span class="entry-note">Structures, sample paragraphs and metalanguage for text response, comparative and analysing argument.</span>
+        <span class="entry-tag">Units 1&ndash;4</span>
+      </a>
+      <!-- ===== to here, and change the href, name, note and tag ===== -->
+
+    </section>
+
+    <section class="shelf">
+      <h2 class="margin-note">Tools</h2>
+
+      <a class="entry" href="https://nmo-soc.github.io/exam-timer/">
+        <span class="entry-name">Assessment Timer</span>
+        <span class="entry-arrow" aria-hidden="true">&rarr;</span>
+        <span class="entry-note">Reading and writing time on one locked screen, with the start and finish clocks showing. Set it up for a CAT, a SAC or a developmental task, then put it on the board.</span>
+        <span class="entry-tag">Exam room</span>
+      </a>
+
+    </section>
+
+    <!-- ===== A further shelf, ready to use. Delete the comment markers
+             below to switch it on, then fill in your own links. =====
+
+    <section class="shelf">
+      <h2 class="margin-note">Classroom</h2>
+
+      <a class="entry" href="/REPO-NAME/">
+        <span class="entry-name">Name of the thing</span>
+        <span class="entry-arrow" aria-hidden="true">&rarr;</span>
+        <span class="entry-note">One line saying what a student would use it for.</span>
+        <span class="entry-tag">Years 7&ndash;10</span>
+      </a>
+
+    </section>
+
+    ===== -->
+
+  </main>
+
+  <details class="ratio-section">
+    <summary>Ratio Calculandi</summary>
+
+    <p class="ratio-intro" lang="la">Nihil eorum quae supra leguntur manu insertum est: omnia ex hodierno die computantur. Ratio haec est.</p>
+    <p class="ratio-intro" lang="en">Nothing at the top of this page is typed in. It is all worked out in the browser from today's date, like so.</p>
+
+    <button class="lang-toggle" id="lang-toggle" type="button">English</button>
+
+    <dl class="ratio">
+      <div>
+        <dt>Kalendae, Nonae, Idus</dt>
+        <dd lang="la">Kalendae primum mensis diem significant. Nonae in quintum diem incidunt, Idus in tertium decimum &mdash; nisi mensibus Martio, Maio, Julio, Octobri, in quibus in septimum et quintum decimum incidunt. Ceteri dies retro numerantur usque ad proximum ex his tribus, utroque fine incluso; qui autem proxime antecedit, <em>pridie</em> dicitur.
+        <span class="formula">a.d. IV Kal. Sext. &mdash; quattuor dies ad Kalendas, utroque fine numerato</span></dd>
+        <dd lang="en">The Kalends is the first of the month. The Nones falls on the 5th and the Ides on the 13th &mdash; except in March, May, July and October, when they fall on the 7th and the 15th. Every other day is counted <em>inclusively backwards</em> to whichever of the three comes next, and the day immediately before one of them is <em>pridie</em>.
+        <span class="formula">29 July &rarr; four days to the Kalends of August, counting both ends &rarr; a.d. IV Kal. Aug.</span></dd>
+      </div>
+
+      <div>
+        <dt>Annus ab Urbe Condita</dt>
+        <dd lang="la">Anni ab urbe condita numerantur, quae secundum Varronem anno DCCLIII ante Christum natum condita est. Annus Romanus proprie Parilibus, id est a.d. XI Kal. Mai., incipiebat; haec autem pagina a Kalendis Januariis numerat.
+        <span class="formula">annus post Christum natum + DCCLIII</span></dd>
+        <dd lang="en">Years since the founding of Rome, on Varro's date of 753 BC. The Roman year properly turned over on 21 April, the Parilia, but this page counts from 1 January.
+        <span class="formula">year AD + 753</span></dd>
+      </div>
+
+      <div>
+        <dt>Sol in signo</dt>
+        <dd lang="la">Locus solis in orbe signifero, septem gradibus adiectis: nam Plinius et Columella aequinoctium in octavo Arietis gradu ponunt, non in primo. Ideo signa Romana septem fere diebus ante nostra incipiunt. Gradus autem is est quem sol in ipso signo iam confecit.
+        <span class="formula">(locus solis + VII gradus) per XXX: signum et gradus</span></dd>
+        <dd lang="en">The sun's position along the ecliptic, then shifted seven degrees: Pliny and Columella both put the equinox in the <em>eighth</em> degree of Aries rather than the first, so the Roman signs begin about a week earlier than the modern ones. The <em>gradus</em> is the degree the sun has reached within the sign.
+        <span class="formula">(solar longitude + 7&deg;) &divide; 30 &rarr; sign, remainder &rarr; degree</span></dd>
+      </div>
+
+      <div>
+        <dt>Dies</dt>
+        <dd lang="la">Septem dies planetarum: dies Solis, Lunae, Martis, Mercurii, Jovis, Veneris, Saturni.</dd>
+        <dd lang="en">The seven planetary days, running from <em>Dies Solis</em> through <em>Lunae</em>, <em>Martis</em>, <em>Mercurii</em>, <em>Jovis</em> and <em>Veneris</em> to <em>Dies Saturni</em>.</dd>
+      </div>
+
+      <div>
+        <dt>Aureus Numerus</dt>
+        <dd lang="la">Locus anni in cyclo lunari undeviginti annorum, quo peracto lunae cursus in eosdem dies redit.
+        <span class="formula">(annus + I) per XIX: reliquum, aut XIX si nihil superest</span></dd>
+        <dd lang="en">Where the year stands in the nineteen-year lunar cycle, after which the moon's phases fall again on the same dates.
+        <span class="formula">(year + 1) mod 19, taking 19 if nothing remains</span></dd>
+      </div>
+
+      <div>
+        <dt>Epacta</dt>
+        <dd lang="la">Aetas lunae Kalendis Januariis: undecim fere dies quibus annus solaris duodecim menses lunares superat. Inde novilunia inveniuntur, atque ita Pascha constituitur. Numerus XXX asterisco scribitur. Numerus adiectus XVIII est ab anno MCM usque ad MMCXCIX.
+        <span class="formula">(XI &times; Aureus Numerus + XVIII) per XXX: reliquum</span></dd>
+        <dd lang="en">How old the moon is on 1 January &mdash; the eleven-odd days by which the solar year outruns twelve lunar months. It locates the new moons, and so fixes Easter. Thirty is written as an asterisk. The added constant is 18 for the years 1900 to 2199.
+        <span class="formula">(11 &times; Aureus Numerus + 18) mod 30</span></dd>
+      </div>
+
+      <div>
+        <dt>Indictio Romana</dt>
+        <dd lang="la">Cyclus civilis quindecim annorum, imperii postremi, ad instrumenta notanda diu postea servatus. Nihil ad astra pertinet.
+        <span class="formula">(annus + III) per XV: reliquum, aut XV si nihil superest</span></dd>
+        <dd lang="en">A fifteen-year civil cycle of the late Empire, kept up long afterwards for dating documents. It carries no astronomical meaning at all.
+        <span class="formula">(year + 3) mod 15, taking 15 if nothing remains</span></dd>
+      </div>
+
+      <div>
+        <dt>Cyclus Solaris</dt>
+        <dd lang="la">Duodetriginta anni, quibus peractis, in ratione Juliana, dies hebdomadis in eosdem mensis dies redeunt.
+        <span class="formula">(annus + IX) per XXVIII: reliquum, aut XXVIII si nihil superest</span></dd>
+        <dd lang="en">The twenty-eight years after which, in the Julian reckoning, the days of the week come round to the same dates again.
+        <span class="formula">(year + 9) mod 28, taking 28 if nothing remains</span></dd>
+      </div>
+    </dl>
+
+    <p class="ratio-source" lang="la">Calendarium ex tabulis <a href="https://penelope.uchicago.edu/encyclopaedia_romana/calendar/juliancalendar.html">Encyclopaediae Romanae</a>; quattuor cycli ex <a href="https://calculus-temporum-romanorum-a0a9d6.gitlab.io/">Calculo Temporum Romanorum</a>.</p>
+    <p class="ratio-source" lang="en">The calendar follows the tables in the <a href="https://penelope.uchicago.edu/encyclopaedia_romana/calendar/juliancalendar.html">Encyclopaedia Romana</a>; the four cycles follow <a href="https://calculus-temporum-romanorum-a0a9d6.gitlab.io/">Calculus Temporum Romanorum</a>.</p>
+  </details>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ============================================================
+     SETTINGS — the only two lines you are likely to want to change
+     ============================================================ */
+
+  // Varro's date for the founding of Rome is 753 BC, which makes AD 2026
+  // the year 2779 A.U.C. Change this to 752 if you prefer that reckoning.
+  var AUC_EPOCH = 753;
+
+  // The Roman year properly turned over on 21 April, the Parilia.
+  // Set this to true and January to 20 April will count as the previous
+  // A.U.C. year; set it to false and the year turns over on 1 January.
+  var AUC_FROM_PARILIA = false;
+
+  /* ============================================================
+     The Roman calendar, after the tables at
+     penelope.uchicago.edu/encyclopaedia_romana/calendar/juliancalendar.html
+     ============================================================ */
+
+  var MONTHS = [
+    { name: 'Januariae',  ab: 'Jan.',  len: 31, nones: 5, ides: 13 },
+    { name: 'Februariae', ab: 'Feb.',  len: 28, nones: 5, ides: 13 },
+    { name: 'Martiae',    ab: 'Mar.',  len: 31, nones: 7, ides: 15 },
+    { name: 'Apriles',    ab: 'Apr.',  len: 30, nones: 5, ides: 13 },
+    { name: 'Maiae',      ab: 'Mai.',  len: 31, nones: 7, ides: 15 },
+    { name: 'Juniae',     ab: 'Jun.',  len: 30, nones: 5, ides: 13 },
+    { name: 'Juliae',     ab: 'Jul.',  len: 31, nones: 7, ides: 15 },
+    { name: 'Augustae',   ab: 'Aug.',  len: 31, nones: 5, ides: 13 },
+    { name: 'Septembres', ab: 'Sept.', len: 30, nones: 5, ides: 13 },
+    { name: 'Octobres',   ab: 'Oct.',  len: 31, nones: 7, ides: 15 },
+    { name: 'Novembres',  ab: 'Nov.',  len: 30, nones: 5, ides: 13 },
+    { name: 'Decembres',  ab: 'Dec.',  len: 31, nones: 5, ides: 13 }
+  ];
+
+  var WEEKDAYS = ['Dies Solis', 'Dies Lunae', 'Dies Martis', 'Dies Mercurii',
+                  'Dies Jovis', 'Dies Veneris', 'Dies Saturni'];
+
+  function isLeap(y) {
+    return (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0;
+  }
+
+  function roman(n) {
+    var t = [[1000,'M'],[900,'CM'],[500,'D'],[400,'CD'],[100,'C'],[90,'XC'],
+             [50,'L'],[40,'XL'],[10,'X'],[9,'IX'],[5,'V'],[4,'IV'],[1,'I']],
+        out = '', i;
+    for (i = 0; i < t.length; i++) {
+      while (n >= t[i][0]) { out += t[i][1]; n -= t[i][0]; }
+    }
+    return out;
+  }
+
+  // Days are counted inclusively backwards from the Kalends, Nones and Ides.
+  function romanDate(y, m, d) {
+    var mo = MONTHS[m - 1],
+        next = MONTHS[m % 12],
+        leapFeb = (m === 2 && isLeap(y)),
+        len = leapFeb ? 29 : mo.len;
+
+    if (d === 1)             return 'Kalendae ' + mo.name;
+    if (d === mo.nones)      return 'Nonae ' + mo.name;
+    if (d === mo.ides)       return 'Idus ' + mo.name;
+    if (d === mo.nones - 1)  return 'pridie Non. ' + mo.ab;
+    if (d === mo.ides - 1)   return 'pridie Id. ' + mo.ab;
+    if (d < mo.nones)        return 'a.d. ' + roman(mo.nones - d + 1) + ' Non. ' + mo.ab;
+    if (d < mo.ides)         return 'a.d. ' + roman(mo.ides - d + 1) + ' Id. ' + mo.ab;
+
+    // After the Ides, count on to the Kalends of the following month.
+    if (leapFeb) {
+      // In a leap year the intercalated day follows a.d. VII Kal. Mart.,
+      // so 24 February is doubled: the bissextum.
+      if (d === 24) return 'a.d. bis VI Kal. ' + next.ab;
+      if (d > 24) d = d - 1;
+      return d === 28 ? 'pridie Kal. ' + next.ab
+                      : 'a.d. ' + roman(28 - d + 2) + ' Kal. ' + next.ab;
+    }
+    if (d === len) return 'pridie Kal. ' + next.ab;
+    return 'a.d. ' + roman(len - d + 2) + ' Kal. ' + next.ab;
+  }
+
+  /* ============================================================
+     The zodiac
+
+     Pliny (Natural History II.81) and Columella (De Re Rustica IX.14)
+     both put the equinoxes and solstices in the EIGHTH degree of Aries,
+     Libra, Capricorn and Cancer, rather than the first. Columella says
+     so expressly, and rejects Hipparchus for holding otherwise. Their
+     signs therefore begin about a week earlier in the calendar than the
+     modern tropical ones. Set the offset below to 0 for modern reckoning.
+     ============================================================ */
+
+  var ZODIAC_OFFSET = 7;
+
+  var SIGNS = ['in Ariete', 'in Tauro', 'in Geminis', 'in Cancro',
+               'in Leone', 'in Virgine', 'in Libra', 'in Scorpione',
+               'in Sagittario', 'in Capricorno', 'in Aquario', 'in Piscibus'];
+
+  // The sun's apparent ecliptic longitude, by the low-precision method of
+  // the Astronomical Almanac. Good to about a hundredth of a degree.
+  function solarLongitude(date) {
+    var RAD = Math.PI / 180,
+        n = date.getTime() / 86400000 + 2440587.5 - 2451545.0,
+        L = 280.460 + 0.9856474 * n,
+        g = (357.528 + 0.9856003 * n) * RAD,
+        lam = L + 1.915 * Math.sin(g) + 0.020 * Math.sin(2 * g);
+    return ((lam % 360) + 360) % 360;
+  }
+
+  function signum(date) {
+    var lam = (solarLongitude(date) + ZODIAC_OFFSET) % 360,
+        degree = Math.floor(lam % 30) + 1;
+    return SIGNS[Math.floor(lam / 30)] + ', gradu ' + roman(degree);
+  }
+
+  /* ============================================================
+     The computus, following the formulae at
+     calculus-temporum-romanorum-a0a9d6.gitlab.io
+     ============================================================ */
+
+  // Golden Number: (year + 1) mod 19, or 19 if the remainder is 0.
+  function goldenNumber(y) { return ((y + 1) % 19) || 19; }
+
+  // Epact: (11 x Golden Number + B) mod 30. B is 18 from 1900, 19 from
+  // 1700, 20 before that. A result of 0 stands for 30 and is written *.
+  function epact(y) {
+    var b = y >= 1900 ? 18 : (y >= 1700 ? 19 : 20);
+    return (11 * goldenNumber(y) + b) % 30;
+  }
+
+  // Roman Indiction: (year + 3) mod 15, or 15 if the remainder is 0.
+  function indiction(y) { return ((y + 3) % 15) || 15; }
+
+  // Solar Cycle: (year + 9) mod 28, or 28 if the remainder is 0.
+  function solarCycle(y) { return ((y + 9) % 28) || 28; }
+
+  /* ============================================================
+     Render
+     ============================================================ */
+
+  var CIVIL_MONTHS = ['January','February','March','April','May','June','July',
+                      'August','September','October','November','December'];
+  var lastRendered = null;
+
+  // Paint any run of Roman numerals in minium.
+  function rubricate(s) {
+    return s.replace(/\b([IVXLCDM]+)\b/g, '<span class="num">$1</span>');
+  }
+
+  function set(id, text) {
+    var el = document.getElementById(id);
+    if (el) el.innerHTML = rubricate(text);
+  }
+
+  function render() {
+    var now = new Date(),
+        y = now.getFullYear(),
+        m = now.getMonth() + 1,
+        d = now.getDate(),
+        stamp = y + '-' + m + '-' + d,
+        aucYear, e, civil;
+
+    if (stamp === lastRendered) return;
+    lastRendered = stamp;
+
+    aucYear = y + AUC_EPOCH;
+    if (AUC_FROM_PARILIA && (m < 4 || (m === 4 && d < 21))) aucYear -= 1;
+
+    e = epact(y);
+
+    set('roman-date', romanDate(y, m, d));
+    set('auc-year', roman(aucYear));
+    set('sol-signum', signum(now));
+    set('latin-weekday', WEEKDAYS[now.getDay()]);
+    set('c-aureus', roman(goldenNumber(y)));
+    set('c-epacta', e === 0 ? '*' : roman(e));
+    set('c-indictio', roman(indiction(y)));
+    set('c-cyclus', roman(solarCycle(y)));
+
+    civil = document.getElementById('civil-date');
+    if (civil) {
+      civil.textContent = d + ' ' + CIVIL_MONTHS[m - 1] + ' ' + y;
+      civil.setAttribute('datetime', y + '-' +
+        ('0' + m).slice(-2) + '-' + ('0' + d).slice(-2));
+    }
+  }
+
+  render();
+  // Keep the dateline honest if the page is left open past midnight.
+  setInterval(render, 60000);
+
+  // Latin or English for the notes at the foot of the page.
+  var toggle = document.getElementById('lang-toggle');
+  if (toggle) {
+    toggle.addEventListener('click', function () {
+      var english = document.body.getAttribute('data-ratio') === 'en';
+      document.body.setAttribute('data-ratio', english ? 'la' : 'en');
+      toggle.textContent = english ? 'English' : 'Latine';
+    });
+  }
+})();
+</script>
+</body>
+</html>
