@@ -91,6 +91,8 @@
   }
   .banner-day{font-size:.74rem}
 
+  #clock.unsynced{opacity:.7;text-decoration:underline dotted}
+
   #clock{
     color:var(--ochre);
     letter-spacing:.09em;
@@ -331,7 +333,7 @@
 
 <header class="banner">
   <div class="banner-inner banner-now" aria-label="The time now, in Roman hours">
-    <span><time id="clock" title="The clock on this device, which the operating system keeps synchronised to network time.">--:--:--</time></span>
+    <span title="International Atomic Time, 37 seconds ahead of UTC, shown at the local offset. Anchored to the web server's clock, not this device's."><span class="lbl">TAI</span><time id="clock">--:--:--</time></span>
     <span lang="la" id="hora" title="The hour of the natural day: sunrise to sunset divided into twelve, and the night likewise.">&mdash;</span>
     <span lang="la" id="pars-diei" title="The division of the civil day, midnight to midnight, by its old Latin name.">&mdash;</span>
   </div>
@@ -498,10 +500,70 @@
   var LATITUDE  = -37.8136;
   var LONGITUDE = 144.9631;
 
-  // Seconds added to the device clock, which the operating system already
-  // keeps synchronised to network time. Set this to 37 to show TAI, the
-  // atomic timescale, which currently runs 37 seconds ahead of UTC.
-  var CLOCK_OFFSET = 0;
+  // International Atomic Time runs ahead of UTC by the accumulated leap
+  // seconds. IERS Bulletin C 72 (6 July 2026) holds UTC - TAI at -37s and
+  // announces no leap second for December 2026. If a leap second is ever
+  // added, raise this by one. Set it to 0 to show ordinary civil time.
+  var TAI_OFFSET = 37;
+
+  // How often to re-interrogate the server clock, in minutes.
+  var RESYNC_MINUTES = 15;
+
+  /* ============================================================
+     The clock
+
+     The device clock is not trusted. Instead the page asks its own server
+     for the time and works out how far this machine has drifted from it.
+
+     An HTTP Date header is only accurate to the whole second, so a single
+     reading would leave us up to a second out. Each reading does however
+     bound the true offset: the header was generated somewhere between the
+     moment we sent the request and the moment the reply arrived, and the
+     server's true time then lay somewhere inside that whole second. Taking
+     several readings at different points in the second and intersecting
+     those bounds narrows the answer to a fraction of a second.
+
+     If the page is opened straight off the disk, or the network is down,
+     the fetch fails, the offset stays at zero, and the clock falls back to
+     this device while marking itself as unsynchronised.
+     ============================================================ */
+
+  var netOffset = 0;      // milliseconds to add to Date.now() for true UTC
+  var synced = false;
+
+  function trueNow() { return Date.now() + netOffset; }
+
+  function syncClock() {
+    var lo = -Infinity, hi = Infinity, taken = 0, PROBES = 6;
+
+    if (!window.fetch) return;
+
+    function probe() {
+      var sent = Date.now();
+      fetch(location.pathname + '?t=' + sent, { method: 'HEAD', cache: 'no-store' })
+        .then(function (res) {
+          var received = Date.now(),
+              header = res.headers.get('Date'),
+              stamp = header ? Date.parse(header) : NaN;
+          if (!isNaN(stamp)) {
+            // true offset lies in [stamp - received, stamp + 1000 - sent]
+            lo = Math.max(lo, stamp - received);
+            hi = Math.min(hi, stamp + 1000 - sent);
+          }
+        })
+        .catch(function () { /* offline, or opened as a local file */ })
+        .then(function () {
+          taken++;
+          if (taken < PROBES) {
+            setTimeout(probe, 130);
+          } else if (lo > -Infinity && hi < Infinity && lo <= hi) {
+            netOffset = Math.round((lo + hi) / 2);
+            synced = true;
+          }
+        });
+    }
+    probe();
+  }
 
   /* ============================================================
      The Roman calendar, after the tables at
@@ -737,7 +799,7 @@
   }
 
   function render() {
-    var now = new Date(),
+    var now = new Date(trueNow()),
         y = now.getFullYear(),
         m = now.getMonth() + 1,
         d = now.getDate(),
@@ -765,19 +827,33 @@
   function pad(n) { return (n < 10 ? '0' : '') + n; }
 
   function tick() {
-    var now = new Date(Date.now() + CLOCK_OFFSET * 1000),
+    var now = new Date(trueNow()),
+        atomic = new Date(trueNow() + TAI_OFFSET * 1000),
         clock = document.getElementById('clock'),
         h = horae(now);
 
     if (clock) {
-      clock.textContent = pad(now.getHours()) + ':' + pad(now.getMinutes())
-                        + ':' + pad(now.getSeconds());
+      clock.textContent = pad(atomic.getHours()) + ':' + pad(atomic.getMinutes())
+                        + ':' + pad(atomic.getSeconds());
+      clock.className = synced ? '' : 'unsynced';
+      if (!synced) {
+        clock.title = 'Could not reach the server clock, so this is falling '
+                    + 'back to the time kept by this device.';
+      }
     }
     set('hora', h ? h.hora : '\u2014');
     set('pars-diei', h ? h.pars : '\u2014');
 
     render();   // returns immediately unless the date has turned over
   }
+
+  syncClock();
+  setInterval(syncClock, RESYNC_MINUTES * 60000);
+
+  // A sleeping laptop drifts, so check again whenever the tab comes back.
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden) syncClock();
+  });
 
   tick();
   setInterval(tick, 1000);
