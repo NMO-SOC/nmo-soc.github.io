@@ -341,7 +341,6 @@
     <span lang="la"><span id="auc-year">&mdash;</span> A.U.C.</span>
     <span lang="la" title="The sun's place in the zodiac, reckoned as Pliny and Columella reckoned it, with the equinox falling in the eighth degree of Aries.">Sol <span id="sol-signum">&mdash;</span></span>
     <span lang="la" id="latin-weekday">&mdash;</span>
-    <span><time id="civil-date"></time></span>
     <span title="Golden Number: the year's place in the 19-year lunar cycle."><span class="lbl">Aureus Numerus</span><span id="c-aureus">&mdash;</span></span>
     <span title="Epact: the age of the moon on 1 January. Thirty is written as an asterisk."><span class="lbl">Epacta</span><span id="c-epacta">&mdash;</span></span>
     <span title="Roman Indiction: a 15-year civil cycle used for dating documents."><span class="lbl">Indictio</span><span id="c-indictio">&mdash;</span></span>
@@ -366,7 +365,7 @@
     <a class="panel" href="/VCE-English-Guide/">
       <span class="panel-name">VCE English Guide</span>
       <span class="panel-note">Structures, sample paragraphs and metalanguage for text response, comparative and analysing argument.</span>
-      <span class="panel-tag">Units I&ndash;IV</span>
+      <span class="panel-tag">Units III&ndash;IV</span>
     </a>
     <!-- ===== to here, and change the href, name, note and tag ===== -->
 
@@ -725,8 +724,6 @@
      Render
      ============================================================ */
 
-  var CIVIL_MONTHS = ['January','February','March','April','May','June','July',
-                      'August','September','October','November','December'];
   var lastRendered = null;
 
   // Paint any run of Roman numerals in the accent colour.
@@ -745,7 +742,7 @@
         m = now.getMonth() + 1,
         d = now.getDate(),
         stamp = y + '-' + m + '-' + d,
-        aucYear, e, civil;
+        aucYear, e;
 
     if (stamp === lastRendered) return;
     lastRendered = stamp;
@@ -763,13 +760,6 @@
     set('c-epacta', e === 0 ? '*' : roman(e));
     set('c-indictio', roman(indiction(y)));
     set('c-cyclus', roman(solarCycle(y)));
-
-    civil = document.getElementById('civil-date');
-    if (civil) {
-      civil.textContent = d + ' ' + CIVIL_MONTHS[m - 1] + ' ' + y;
-      civil.setAttribute('datetime', y + '-' +
-        ('0' + m).slice(-2) + '-' + ('0' + d).slice(-2));
-    }
   }
 
   function pad(n) { return (n < 10 ? '0' : '') + n; }
