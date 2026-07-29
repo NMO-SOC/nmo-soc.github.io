@@ -92,6 +92,7 @@
   .banner-day{font-size:.74rem}
 
   #clock.unsynced{opacity:.7;text-decoration:underline dotted}
+  #clock-ms{opacity:.62;font-size:.86em}
 
   #clock{
     color:var(--ochre);
@@ -333,7 +334,7 @@
 
 <header class="banner">
   <div class="banner-inner banner-now" aria-label="The time now, in Roman hours">
-    <span title="International Atomic Time, 37 seconds ahead of UTC, shown at the local offset. Anchored to the web server's clock, not this device's."><span class="lbl">TAI</span><time id="clock">--:--:--</time></span>
+    <span title="International Atomic Time, 37 seconds ahead of UTC, shown at the local offset."><span class="lbl">TAI</span><time id="clock"><span id="clock-hms">--:--:--</span><span id="clock-ms">.---</span></time></span>
     <span lang="la" id="hora" title="The hour of the natural day: sunrise to sunset divided into twelve, and the night likewise.">&mdash;</span>
     <span lang="la" id="pars-diei" title="The division of the civil day, midnight to midnight, by its old Latin name.">&mdash;</span>
   </div>
@@ -530,39 +531,74 @@
 
   var netOffset = 0;      // milliseconds to add to Date.now() for true UTC
   var synced = false;
+  var syncNote = 'not yet synchronised';
 
   function trueNow() { return Date.now() + netOffset; }
 
-  function syncClock() {
-    var lo = -Infinity, hi = Infinity, taken = 0, PROBES = 6;
+  // One reading. The Date header names a whole second, so the true offset
+  // lies between (stamp - received) and (stamp + 1000 - sent).
+  function probe(method, done) {
+    var sent = Date.now();
+    fetch(location.pathname + '?_=' + sent + '.' + Math.random(),
+          { method: method, cache: 'no-store' })
+      .then(function (res) {
+        var received = Date.now(),
+            header = res.headers.get('Date'),
+            age = parseInt(res.headers.get('Age') || '0', 10),
+            stamp = header ? Date.parse(header) : NaN;
+        if (isNaN(stamp)) { done(null); return; }
+        if (age > 0) stamp += age * 1000;     // it came from a cache
+        done({ lo: stamp - received, hi: stamp + 1000 - sent });
+      })
+      .catch(function () { done(null); });
+  }
 
-    if (!window.fetch) return;
+  function runProbes(method, finish) {
+    var samples = [], n = 0, PROBES = 6;
+    (function next() {
+      probe(method, function (sample) {
+        if (sample) samples.push(sample);
+        n++;
+        if (n < PROBES) setTimeout(next, 120);
+        else finish(samples);
+      });
+    })();
+  }
 
-    function probe() {
-      var sent = Date.now();
-      fetch(location.pathname + '?t=' + sent, { method: 'HEAD', cache: 'no-store' })
-        .then(function (res) {
-          var received = Date.now(),
-              header = res.headers.get('Date'),
-              stamp = header ? Date.parse(header) : NaN;
-          if (!isNaN(stamp)) {
-            // true offset lies in [stamp - received, stamp + 1000 - sent]
-            lo = Math.max(lo, stamp - received);
-            hi = Math.min(hi, stamp + 1000 - sent);
-          }
-        })
-        .catch(function () { /* offline, or opened as a local file */ })
-        .then(function () {
-          taken++;
-          if (taken < PROBES) {
-            setTimeout(probe, 130);
-          } else if (lo > -Infinity && hi < Infinity && lo <= hi) {
-            netOffset = Math.round((lo + hi) / 2);
-            synced = true;
-          }
-        });
+  // Intersect the brackets if they agree. If they do not - a cache or a
+  // stray delay can throw one out - fall back to the median estimate
+  // rather than abandoning the sync altogether.
+  function applySamples(samples) {
+    var lo = -Infinity, hi = Infinity, mids = [], i;
+
+    for (i = 0; i < samples.length; i++) {
+      lo = Math.max(lo, samples[i].lo);
+      hi = Math.min(hi, samples[i].hi);
+      mids.push((samples[i].lo + samples[i].hi) / 2);
     }
-    probe();
+
+    if (lo <= hi) {
+      netOffset = Math.round((lo + hi) / 2);
+      syncNote = 'server clock, to within about ' + Math.round((hi - lo) / 2) + ' ms';
+    } else {
+      mids.sort(function (a, b) { return a - b; });
+      netOffset = Math.round(mids[Math.floor(mids.length / 2)]);
+      syncNote = 'server clock, approximate';
+    }
+    synced = true;
+  }
+
+  function syncClock() {
+    if (!window.fetch) { syncNote = 'this browser cannot ask the server'; return; }
+
+    runProbes('HEAD', function (samples) {
+      if (samples.length) { applySamples(samples); return; }
+      // some caches and proxies mishandle HEAD, so try a plain request
+      runProbes('GET', function (more) {
+        if (more.length) applySamples(more);
+        else syncNote = 'could not reach the server clock';
+      });
+    });
   }
 
   /* ============================================================
@@ -825,24 +861,36 @@
   }
 
   function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function pad3(n) { return (n < 10 ? '00' : n < 100 ? '0' : '') + n; }
+
+  var elClock, elHms, elMs, lastHms = '', lastPars = '', lastHora = '';
 
   function tick() {
-    var now = new Date(trueNow()),
-        atomic = new Date(trueNow() + TAI_OFFSET * 1000),
-        clock = document.getElementById('clock'),
-        h = horae(now);
+    var stamp = trueNow(),
+        now = new Date(stamp),
+        atomic = new Date(stamp + TAI_OFFSET * 1000),
+        hms, h;
 
-    if (clock) {
-      clock.textContent = pad(atomic.getHours()) + ':' + pad(atomic.getMinutes())
-                        + ':' + pad(atomic.getSeconds());
-      clock.className = synced ? '' : 'unsynced';
-      if (!synced) {
-        clock.title = 'Could not reach the server clock, so this is falling '
-                    + 'back to the time kept by this device.';
-      }
+    if (elMs) elMs.textContent = '.' + pad3(atomic.getMilliseconds());
+
+    hms = pad(atomic.getHours()) + ':' + pad(atomic.getMinutes())
+        + ':' + pad(atomic.getSeconds());
+    if (elHms && hms !== lastHms) {
+      elHms.textContent = hms;
+      lastHms = hms;
     }
-    set('hora', h ? h.hora : '\u2014');
-    set('pars-diei', h ? h.pars : '\u2014');
+
+    if (elClock) {
+      elClock.className = synced ? '' : 'unsynced';
+      elClock.title = synced
+        ? 'International Atomic Time, 37 seconds ahead of UTC, shown at the '
+          + 'local offset. Taken from the ' + syncNote + '.'
+        : 'Showing the time kept by this device: ' + syncNote + '.';
+    }
+
+    h = horae(now);
+    if (h && h.hora !== lastHora) { set('hora', h.hora); lastHora = h.hora; }
+    if (h && h.pars !== lastPars) { set('pars-diei', h.pars); lastPars = h.pars; }
 
     render();   // returns immediately unless the date has turned over
   }
@@ -855,8 +903,16 @@
     if (!document.hidden) syncClock();
   });
 
+  elClock = document.getElementById('clock');
+  elHms = document.getElementById('clock-hms');
+  elMs = document.getElementById('clock-ms');
+
   tick();
-  setInterval(tick, 1000);
+  if (window.requestAnimationFrame) {
+    (function frame() { tick(); requestAnimationFrame(frame); })();
+  } else {
+    setInterval(tick, 60);
+  }
 
   // Latin or English for the notes at the foot of the page.
   var toggle = document.getElementById('lang-toggle');
