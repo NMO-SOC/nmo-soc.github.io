@@ -172,7 +172,7 @@
   /* ================= the panels: every one the same size ================= */
   .panels{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(16.5rem,1fr));
+    grid-template-columns:repeat(auto-fit,minmax(min(24rem,100%),1fr));
     gap:1.4rem;
     margin:0;
     padding:0;
@@ -223,13 +223,6 @@
     letter-spacing:.2em;
     text-transform:uppercase;
     color:var(--ochre);
-  }
-
-  /* a tile that stands alone, across the full width */
-  .panel-wide{
-    grid-column:1 / -1;
-    min-height:0;
-    padding:clamp(1.75rem,3.5vw,2.4rem) 1.35rem;
   }
 
   .panel:hover,
@@ -409,7 +402,7 @@
       <span class="panel-tag">Years VII&ndash;X</span>
     </a>
 
-    <a class="panel panel-wide" href="/VCE-English-Guide/marker.html">
+    <a class="panel" href="/VCE-English-Guide/marker.html">
       <span class="panel-name">Essay Marker</span>
       <span class="panel-note">Type an essay in, or photograph handwritten work, and have it marked against the official criteria and expected qualities.</span>
       <span class="panel-tag">Sections A &middot; B &middot; C</span>
