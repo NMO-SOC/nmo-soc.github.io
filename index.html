@@ -186,7 +186,8 @@
     gap:.7rem;
     height:100%;
     min-height:14rem;
-    padding:clamp(2rem,4.5vw,2.85rem) 1.6rem;
+    container-type:inline-size;
+    padding:clamp(2rem,4.5vw,2.85rem) 1.35rem;
     background:var(--pompeian);
     color:var(--plaster);
     border:1px solid var(--ochre);
@@ -198,10 +199,14 @@
 
   .panel-name{
     font-family:var(--display);
-    font-size:clamp(1.2rem,3.2vw,1.6rem);
     line-height:1.2;
-    letter-spacing:.12em;
+    letter-spacing:.08em;
     text-transform:uppercase;
+    overflow-wrap:break-word;
+    /* fallback for browsers without container queries */
+    font-size:clamp(1.05rem,2.4vw,1.3rem);
+    /* sized against the width of the tile itself, so a long word fits */
+    font-size:clamp(1rem,6.8cqi,1.45rem);
   }
 
   .panel-note{
