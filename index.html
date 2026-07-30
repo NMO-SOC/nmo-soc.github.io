@@ -225,6 +225,13 @@
     color:var(--ochre);
   }
 
+  /* a tile that stands alone, across the full width */
+  .panel-wide{
+    grid-column:1 / -1;
+    min-height:0;
+    padding:clamp(1.75rem,3.5vw,2.4rem) 1.35rem;
+  }
+
   .panel:hover,
   .panel:focus-visible{background:var(--pompeian-lit);outline-color:var(--ochre)}
   .panel:focus-visible{outline-width:2px}
@@ -400,6 +407,12 @@
       <span class="panel-name">Developmental Rubric Builder</span>
       <span class="panel-note">Choose the curriculum descriptions a task actually assesses, draft the five levels, and export a rubric Compass will import.</span>
       <span class="panel-tag">Years VII&ndash;X</span>
+    </a>
+
+    <a class="panel panel-wide" href="/VCE-English-Guide/marker.html">
+      <span class="panel-name">Essay Marker</span>
+      <span class="panel-note">Type an essay in, or photograph handwritten work, and have it marked against the official criteria and expected qualities.</span>
+      <span class="panel-tag">Sections A &middot; B &middot; C</span>
     </a>
 
   </div>
