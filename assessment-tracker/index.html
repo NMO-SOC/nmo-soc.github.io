@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>English 7–10 Assessment Coverage</title>
+<style>
+  :root{
+    --bg:#f6f7fa; --card:#fff; --ink:#1b2430; --ink-soft:#3f4b5b; --muted:#717d8d;
+    --line:#e5e9ef; --line-soft:#eef1f5;
+    --accent:#3f51b5; --accent-soft:#eef0fb; --accent-ink:#2b3a8f;
+    --done:#0f8a5f; --done-soft:#e7f6ef; --done-line:#a9dcc4;
+    --shadow:0 1px 2px rgba(16,24,40,.06); --shadow-lg:0 12px 32px rgba(16,24,40,.14);
+    --r:12px; --hdr:170px;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:15px/1.55 ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1320px;margin:0 auto;padding:0 24px}
+
+  /* ---------- header ---------- */
+  header{background:rgba(255,255,255,.92);backdrop-filter:saturate(180%) blur(8px);
+    border-bottom:1px solid var(--line);position:sticky;top:0;z-index:40}
+  .titlebar{display:flex;align-items:flex-start;gap:16px;padding:16px 0 0}
+  h1{margin:0;font-size:20px;letter-spacing:-.01em;font-weight:650}
+  .sub{color:var(--muted);font-size:12.5px;margin-top:2px}
+  .spacer{flex:1}
+  .filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:12px 0 14px}
+
+  .seg{display:inline-flex;background:var(--line-soft);border:1px solid var(--line);border-radius:9px;padding:2px}
+  .seg button{border:0;background:transparent;padding:5px 12px;border-radius:7px;cursor:pointer;
+    font:inherit;font-size:13.5px;color:var(--ink-soft);white-space:nowrap}
+  .seg button:hover{color:var(--ink)}
+  .seg button.on{background:var(--card);color:var(--accent-ink);font-weight:600;box-shadow:var(--shadow)}
+  select,input,textarea{font:inherit;color:var(--ink);background:var(--card);
+    border:1px solid var(--line);border-radius:9px;padding:6px 10px;font-size:13.5px}
+  select:focus,input:focus,textarea:focus{outline:2px solid var(--accent-soft);border-color:var(--accent)}
+  .search{position:relative;flex:1;min-width:200px;max-width:340px}
+  .search input{width:100%;padding-left:31px}
+  .search svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);opacity:.45}
+  .btn{font:inherit;font-size:13.5px;padding:6px 12px;border:1px solid var(--line);border-radius:9px;
+    background:var(--card);color:var(--ink);cursor:pointer;box-shadow:var(--shadow)}
+  .btn:hover{background:#f8f9fb}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:none}
+  .btn.primary:hover{filter:brightness(1.08)}
+  .btn.ghost{box-shadow:none;border-color:transparent;background:transparent}
+  .btn.ghost:hover{background:var(--line-soft)}
+  .btn.danger{color:#b3261e}
+  .icon-btn{display:inline-flex;align-items:center;gap:6px}
+
+  /* data menu */
+  .menu-host{position:relative}
+  .menu{position:absolute;right:0;top:calc(100% + 6px);background:var(--card);border:1px solid var(--line);
+    border-radius:var(--r);box-shadow:var(--shadow-lg);min-width:230px;padding:6px;display:none;z-index:60}
+  .menu.open{display:block}
+  .menu button{display:block;width:100%;text-align:left;border:0;background:transparent;font:inherit;
+    font-size:13.5px;padding:8px 10px;border-radius:8px;cursor:pointer;color:var(--ink)}
+  .menu button:hover{background:var(--line-soft)}
+  .menu hr{border:0;border-top:1px solid var(--line);margin:5px 2px}
+  .menu .hint{font-size:11.5px;color:var(--muted);padding:4px 10px 8px;line-height:1.4}
+
+  /* sync chip */
+  .chip{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted);
+    background:var(--card);border:1px solid var(--line);border-radius:99px;padding:5px 11px;
+    box-shadow:var(--shadow);cursor:pointer;font-family:inherit}
+  .chip:hover{background:#f8f9fb;color:var(--ink-soft)}
+  .chip .dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex:none}
+  .chip.ok .dot{background:var(--done)}
+  .chip.ok{color:var(--done)}
+  .chip.busy .dot{background:var(--accent);animation:pulse 1s ease-in-out infinite}
+  .chip.warn .dot{background:#d98324}
+  .chip.warn{color:#8a5a00}
+  .chip.err .dot{background:#c5372c}
+  .chip.err{color:#b3261e}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+  /* modal */
+  .modal-veil{position:fixed;inset:0;background:rgba(16,24,40,.4);z-index:100;display:none;
+    align-items:center;justify-content:center;padding:20px}
+  .modal-veil.on{display:flex}
+  .modal{background:var(--card);border-radius:16px;box-shadow:var(--shadow-lg);width:min(480px,100%);
+    padding:22px 24px 20px;max-height:90vh;overflow:auto}
+  .modal h3{margin:0 0 6px;font-size:17px;font-weight:650}
+  .modal p{margin:0 0 14px;font-size:13.5px;color:var(--muted);line-height:1.55}
+  .modal ol{margin:0 0 16px;padding-left:20px;font-size:13px;color:var(--ink-soft);line-height:1.7}
+  .modal ol code{background:var(--line-soft);padding:1px 5px;border-radius:4px;font-size:12px}
+  .modal label{display:block;font-size:11.5px;color:var(--muted);margin-bottom:4px}
+  .modal input{width:100%;font-family:ui-monospace,Menlo,monospace;font-size:12.5px}
+  .modal .acts{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;align-items:center}
+  .modal .err{color:#b3261e;font-size:12.5px;margin:10px 0 0}
+
+  /* ---------- summary ---------- */
+  .summary{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+    box-shadow:var(--shadow);padding:15px 20px;margin:20px 0 8px}
+  .tiles{display:flex;flex-wrap:wrap;gap:14px 30px;align-items:flex-start}
+  .tile{min-width:96px}
+  .tile b{display:block;font-size:22px;font-weight:650;letter-spacing:-.02em;line-height:1.25}
+  .tile span{font-size:12px;color:var(--muted)}
+  .ethos{font-size:12.5px;color:var(--muted);margin-top:12px;padding-top:11px;
+    border-top:1px solid var(--line-soft);display:flex;align-items:center;gap:7px}
+  .ethos svg{flex:none;opacity:.55}
+
+  /* ---------- matrix ---------- */
+  main{padding-bottom:80px}
+  .strand{margin-top:30px}
+  .strand-head{display:flex;align-items:baseline;gap:10px;margin:0 0 10px}
+  .strand-head h2{margin:0;font-size:17px;font-weight:650;letter-spacing:-.01em}
+  .strand-head .of{font-size:12.5px;color:var(--muted)}
+  .grid{display:grid;gap:10px}
+  .colhead{position:sticky;top:var(--hdr);z-index:15;background:var(--bg);
+    padding:6px 2px 7px;font-size:12px;font-weight:650;color:var(--muted);
+    text-transform:uppercase;letter-spacing:.07em;border-bottom:1px solid var(--line)}
+  .band{grid-column:1/-1;display:flex;align-items:center;gap:10px;margin:12px 0 -2px}
+  .band h3{margin:0;font-size:13.5px;font-weight:650;color:var(--ink-soft)}
+  .band .rule{flex:1;height:1px;background:var(--line)}
+  .band .of{font-size:11.5px;color:var(--muted);white-space:nowrap}
+
+  .cell{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--line);
+    border-radius:var(--r);padding:11px 13px;cursor:pointer;box-shadow:var(--shadow);
+    display:flex;flex-direction:column;gap:7px;text-align:left;font:inherit;color:inherit;
+    transition:transform .12s ease,box-shadow .12s ease,border-color .12s ease}
+  .cell:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(16,24,40,.09);border-color:#d3d9e3}
+  .cell:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .cell.done{border-left-color:var(--done);background:linear-gradient(#fff,#fcfefd)}
+  .cell .row1{display:flex;align-items:center;gap:7px}
+  .code{font:11.5px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.02em;
+    background:var(--accent-soft);color:var(--accent-ink);padding:1px 7px;border-radius:5px;white-space:nowrap}
+  .cell.done .code{background:var(--done-soft);color:var(--done)}
+  .tick{margin-left:auto;display:inline-flex;align-items:center;gap:4px;font-size:11.5px;color:var(--muted)}
+  .cell.done .tick{color:var(--done);font-weight:600}
+  .cd-text{font-size:13.5px;line-height:1.5;color:var(--ink-soft)}
+  .tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:1px}
+  .tag{font-size:11px;background:var(--done-soft);color:var(--done);border:1px solid var(--done-line);
+    padding:1px 7px;border-radius:99px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .cell.blank{background:transparent;border:1px dashed var(--line);border-left:1px dashed var(--line);
+    box-shadow:none;cursor:default}
+  .cell.blank:hover{transform:none;box-shadow:none}
+
+  /* ---------- by assessment ---------- */
+  .alist{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));margin-top:20px}
+  .acard{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:14px 16px}
+  .acard h4{margin:0 0 3px;font-size:15px}
+  .acard .meta{font-size:12.5px;color:var(--muted);margin-bottom:9px}
+  .acard .codes{display:flex;flex-wrap:wrap;gap:5px}
+  .acard .note{font-size:12.5px;color:var(--muted);margin-top:9px;padding-top:9px;border-top:1px solid var(--line-soft)}
+
+  /* ---------- drawer ---------- */
+  .veil{position:fixed;inset:0;background:rgba(16,24,40,.34);opacity:0;pointer-events:none;
+    transition:opacity .18s ease;z-index:80}
+  .veil.on{opacity:1;pointer-events:auto}
+  .drawer{position:fixed;top:0;right:0;height:100%;width:min(460px,100%);background:var(--card);
+    box-shadow:var(--shadow-lg);transform:translateX(102%);transition:transform .22s cubic-bezier(.3,.8,.3,1);
+    z-index:90;display:flex;flex-direction:column}
+  .drawer.on{transform:none}
+  .drawer-top{padding:18px 20px 14px;border-bottom:1px solid var(--line)}
+  .crumb{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+  .drawer-top .row1{display:flex;align-items:center;gap:8px;margin-bottom:9px}
+  .drawer-top p{margin:0;font-size:14.5px;line-height:1.5;color:var(--ink-soft)}
+  .close{margin-left:auto;border:0;background:transparent;font-size:22px;line-height:1;color:var(--muted);
+    cursor:pointer;padding:0 2px}
+  .close:hover{color:var(--ink)}
+  .drawer-body{padding:16px 20px 26px;overflow:auto;flex:1}
+  .drawer-body h5{margin:0 0 9px;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+  .rec{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px;background:#fcfdfe}
+  .rec .r1{display:flex;align-items:center;gap:8px}
+  .rec b{font-size:14px;font-weight:600}
+  .rec .m{font-size:12px;color:var(--muted);margin-top:2px}
+  .rec .n{font-size:13px;color:var(--ink-soft);margin-top:6px;padding-top:6px;border-top:1px solid var(--line-soft)}
+  .rec .x{margin-left:auto;border:0;background:transparent;color:var(--muted);cursor:pointer;font-size:12.5px}
+  .rec .x:hover{color:#b3261e}
+  .none{color:var(--muted);font-size:13.5px;margin:0 0 14px}
+  form.add{display:grid;gap:8px;margin-top:6px}
+  form.add .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  form.add label{font-size:11.5px;color:var(--muted);display:block;margin-bottom:3px}
+  form.add textarea{min-height:62px;resize:vertical;width:100%}
+  form.add input{width:100%}
+  .divider{border:0;border-top:1px solid var(--line);margin:20px 0 16px}
+
+  .empty-state{background:var(--card);border:1px dashed var(--line);border-radius:var(--r);
+    padding:36px;text-align:center;color:var(--muted);margin-top:20px}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,80px);background:#1b2430;color:#fff;
+    font-size:13.5px;padding:10px 16px;border-radius:10px;box-shadow:var(--shadow-lg);z-index:100;
+    transition:transform .2s ease,opacity .2s ease;opacity:0}
+  .toast.on{transform:translate(-50%,0);opacity:1}
+  footer{color:var(--muted);font-size:12px;text-align:center;padding:0 24px 44px;max-width:1320px;margin:0 auto}
+
+  @media (max-width:900px){
+    .grid{grid-template-columns:1fr !important}
+    .colhead{display:none}
+    .cell.blank{display:none}
+    .cell::before{content:attr(data-level);font-size:11px;color:var(--muted);
+      text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+    .wrap{padding:0 16px}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="titlebar">
+      <div>
+        <h1>English 7–10 · Assessment Coverage</h1>
+        <div class="sub">Victorian Curriculum F–10 Version 2.0 — a record of what you've assessed and how</div>
+      </div>
+      <div class="spacer"></div>
+      <button class="chip" id="syncChip" title="Sync status"><span class="dot"></span><span id="syncText">Loading…</span></button>
+      <div class="menu-host">
+        <button class="btn icon-btn" id="dataBtn" aria-haspopup="true" aria-expanded="false">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg>
+          Data
+        </button>
+        <div class="menu" id="dataMenu" role="menu">
+          <button id="connectBtn">Enable saving on this device…</button>
+          <button id="syncNowBtn">Sync now</button>
+          <button id="repoBtn">Discard local, reload shared copy</button>
+          <hr>
+          <button id="exportBtn">Export coverage.json</button>
+          <button id="importBtn">Import JSON…</button>
+          <button id="csvBtn">Export CSV</button>
+          <hr>
+          <button id="clearBtn" style="color:#b3261e">Clear all records</button>
+          <div class="hint" id="menuHint"></div>
+        </div>
+      </div>
+    </div>
+    <div class="filters">
+      <div class="seg" id="levelSeg"></div>
+      <select id="strandSel" aria-label="Strand"></select>
+      <select id="statusSel" aria-label="Records">
+        <option value="">All content descriptions</option>
+        <option value="covered">With records</option>
+        <option value="uncovered">Without records</option>
+      </select>
+      <select id="classSel" aria-label="Class"></select>
+      <div class="search">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input type="search" id="q" placeholder="Search descriptions, codes, assessments…">
+      </div>
+      <div class="spacer"></div>
+      <div class="seg" id="viewSeg">
+        <button data-view="curriculum" class="on">Curriculum</button>
+        <button data-view="assessments">By assessment</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div id="progress"></div>
+  <div id="content"></div>
+</main>
+<footer id="foot"></footer>
+
+<div class="veil" id="veil"></div>
+<aside class="drawer" id="drawer" aria-hidden="true"></aside>
+<div class="toast" id="toast"></div>
+
+<div class="modal-veil" id="tokenVeil">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="tokenTitle">
+    <h3 id="tokenTitle">Enable saving on this device</h3>
+    <p id="tokenBlurb">Records are shared by every device that opens the site. Viewing needs nothing. To add or remove records, enter the passphrase set on the sync worker — once per device, then it's remembered.</p>
+    <label for="tokenIn">Passphrase</label>
+    <input type="password" id="tokenIn" placeholder="Your passphrase" autocomplete="current-password" spellcheck="false">
+    <p class="err" id="tokenErr" style="display:none"></p>
+    <div class="acts">
+      <button class="btn" id="tokenForget" style="margin-right:auto;display:none">Remove from this device</button>
+      <button class="btn" id="tokenCancel">Cancel</button>
+      <button class="btn primary" id="tokenSave">Enable saving</button>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="fileIn" accept=".json" hidden>
+<datalist id="classList"></datalist>
+<datalist id="assessList"></datalist>
+
+<script src="data/curriculum.js"></script>
+<script>
+(function(){
+  "use strict";
+  /* ===================== configuration =====================
+     SYNC_URL is the Cloudflare worker that holds the GitHub credential.
+     Paste the worker URL here once it's deployed — that's the only edit needed.
+     Leave it empty and the site works, but records stay in each browser.      */
+  const SYNC_URL = "";
+
+  const LS_KEY = "vic-english-7-10-coverage-v1";
+  const PASS_KEY = "vic-english-7-10-passphrase";
+  const SEEN_KEY = "vic-english-7-10-seen-ids";
+  const DATA = window.CURRICULUM;
+  const ITEMS = DATA.items;
+  const LEVELS = DATA.levels;
+  const STRANDS = ["Language","Literature","Literacy"];
+  const $ = id => document.getElementById(id);
+
+  let coverage = {};
+  const ui = {level:"", strand:"", status:"", cls:"", q:"", view:"curriculum", code:null};
+
+  /* ---- data helpers ---- */
+  const uid = () => Math.random().toString(36).slice(2,10);
+  const esc = s => String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const recs = code => coverage[code] || [];
+  const seqOf = code => parseInt(code.replace(/^VC2E\d+(?:LA|LE|LY)/,""),10);
+  const byCode = {}; ITEMS.forEach(i => byCode[i.code] = i);
+  const inScopeRecs = code => ui.cls ? recs(code).filter(r=>r.cls===ui.cls) : recs(code);
+  const isDone = code => inScopeRecs(code).length > 0;
+
+  function load(){
+    try{ const raw = localStorage.getItem(LS_KEY);
+      if (raw){ coverage = JSON.parse(raw).coverage || {}; return true; } }catch(e){}
+    return false;
+  }
+  function save(){
+    try{ localStorage.setItem(LS_KEY, JSON.stringify({version:1,updated:new Date().toISOString(),coverage})); }
+    catch(e){ toast("Couldn't save to this browser: "+e.message); }
+  }
+
+  /* ========================== sync ==========================
+     A small worker holds the GitHub credential, so no token is ever stored in
+     a browser. Reads are open; saving sends the passphrase you set on the
+     worker. Local storage is the offline cache, never the source of truth.   */
+  const sync = {state:"idle", lastAt:null, msg:"", seen:new Set(), timer:null, polling:null, dirty:false};
+  const configured = () => !!SYNC_URL;
+
+  const getPass = () => { try{ return localStorage.getItem(PASS_KEY)||""; }catch(e){ return ""; } };
+  const setPass = p => { try{ p ? localStorage.setItem(PASS_KEY,p) : localStorage.removeItem(PASS_KEY); }catch(e){} };
+  const canWrite = () => configured() && !!getPass();
+  function loadSeen(){
+    try{ sync.seen = new Set(JSON.parse(localStorage.getItem(SEEN_KEY)||"[]")); }catch(e){ sync.seen = new Set(); }
+  }
+  function markSeen(cov){
+    sync.seen = new Set();
+    Object.values(cov).forEach(a => a.forEach(r => sync.seen.add(r.id)));
+    try{ localStorage.setItem(SEEN_KEY, JSON.stringify([...sync.seen])); }catch(e){}
+  }
+  const allIds = cov => { const s = new Set(); Object.values(cov).forEach(a=>a.forEach(r=>s.add(r.id))); return s; };
+
+  /* Keep records another device added since our last sync; honour our own deletes. */
+  function mergeRemote(remote, local){
+    const out = {}; Object.keys(local).forEach(k => out[k] = local[k].slice());
+    const localIds = allIds(local);
+    Object.keys(remote||{}).forEach(code => {
+      (remote[code]||[]).forEach(r => {
+        if (!r || !r.id) return;
+        if (localIds.has(r.id)) return;          // already have it
+        if (sync.seen.has(r.id)) return;         // we deleted it locally
+        (out[code] = out[code] || []).push(r);   // new from another device
+      });
+    });
+    Object.keys(out).forEach(k => { if (!out[k].length) delete out[k]; });
+    return out;
+  }
+
+  /* Read: the worker gives the live copy straight from the repo. The committed
+     file is the fallback, a Pages rebuild behind but always there.            */
+  function readRepo(){
+    const fromFile = () => fetch("data/coverage.json?t="+Date.now(), {cache:"no-store"})
+      .then(r => r.ok ? r.json() : null).catch(() => null);
+    if (!configured()) return fromFile();
+    return fetch(SYNC_URL, {cache:"no-store"})
+      .then(r => r.ok ? r.json() : null)
+      .catch(() => null)
+      .then(j => j || fromFile());
+  }
+
+  function setSync(state, msg){
+    sync.state = state; sync.msg = msg || "";
+    const chip = $("syncChip"), txt = $("syncText");
+    if (!chip) return;
+    chip.className = "chip " + ({saving:"busy", ok:"ok", local:"warn", error:"err"}[state] || "");
+    txt.textContent = msg || state;
+    chip.title = state==="local"
+      ? "Records are saved in this browser only. Enable saving to share them with every device."
+      : (msg || "");
+    const hint = $("menuHint");
+    if (hint) hint.textContent = !configured()
+      ? "Saving isn't set up yet — records stay in this browser. See the README to deploy the sync worker."
+      : (canWrite()
+        ? "This device saves to the shared records. Every device that opens the site sees them."
+        : "Read-only on this device. Enable saving to add records for every device.");
+    const forget = $("tokenForget"); if (forget) forget.style.display = getPass() ? "inline-block" : "none";
+    const cb = $("connectBtn"); if (cb) cb.textContent = getPass() ? "Change or remove passphrase…" : "Enable saving on this device…";
+  }
+  const agoText = () => {
+    if (!sync.lastAt) return "Synced";
+    const s = Math.round((Date.now()-sync.lastAt)/1000);
+    if (s < 45) return "Synced just now";
+    if (s < 5400) return "Synced "+Math.round(s/60)+"m ago";
+    return "Synced "+Math.round(s/3600)+"h ago";
+  };
+
+  /* Pull the repo copy in and adopt anything new. */
+  function pull(opts){
+    opts = opts || {};
+    return readRepo().then(remote => {
+      if (!remote){
+        setSync("local","Local only");
+        return false;
+      }
+      const rc = remote.coverage || {};
+      const before = JSON.stringify(coverage);
+      coverage = opts.replace ? rc : mergeRemote(rc, coverage);
+      const changed = JSON.stringify(coverage) !== before;
+      if (changed || opts.replace){ save(); render(); }
+      if (opts.replace || !sync.dirty) markSeen(coverage);
+      sync.lastAt = Date.now();
+      setSync(canWrite() ? "ok" : "idle", canWrite() ? agoText() : (configured() ? "Read-only" : "This browser only"));
+      return changed;
+    });
+  }
+
+  /* Push local state through the worker, which merges and commits it. */
+  function push(){
+    if (!canWrite()){ sync.dirty = true; setSync("local","Local only"); return Promise.resolve(false); }
+    setSync("saving","Saving…");
+    return fetch(SYNC_URL, {
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({passphrase:getPass(), coverage, seenIds:[...sync.seen]})
+      })
+      .then(res => res.json().catch(()=>({})).then(body => {
+        if (!res.ok) throw new Error(body.error || ("The sync worker returned "+res.status+"."));
+        return body;
+      }))
+      .then(body => {
+        if (body.coverage) coverage = body.coverage;
+        sync.dirty = false; sync.lastAt = Date.now();
+        markSeen(coverage); save(); render();
+        setSync("ok", agoText());
+        return true;
+      })
+      .catch(err => {
+        sync.dirty = true;
+        setSync("error", "Not saved");
+        const known = /passphrase|worker returned|GitHub|repo/i.test(err.message||"");
+        toast(known ? err.message
+          : "Couldn't reach the sync service — your records are safe in this browser and will go up on the next sync.");
+        return false;
+      });
+  }
+
+  function queuePush(){
+    sync.dirty = true;
+    if (!canWrite()){ setSync("local","Local only"); return; }
+    setSync("saving","Saving…");
+    clearTimeout(sync.timer);
+    sync.timer = setTimeout(()=>push(), 1800);
+  }
+  function startPolling(){
+    clearInterval(sync.polling);
+    sync.polling = setInterval(() => {
+      if (document.hidden || sync.dirty || sync.state==="saving") return;
+      pull({});
+    }, 60000);
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden && !sync.dirty) pull({});
+    });
+  }
+
+  let toastTimer;
+  function toast(msg){
+    const t = $("toast"); t.textContent = msg; t.classList.add("on");
+    clearTimeout(toastTimer); toastTimer = setTimeout(()=>t.classList.remove("on"), 3200);
+  }
+
+  function visibleLevels(){ return ui.level ? [ui.level] : LEVELS; }
+  function matches(it){
+    if (ui.strand && it.strand !== ui.strand) return false;
+    if (ui.status === "covered" && !isDone(it.code)) return false;
+    if (ui.status === "uncovered" && isDone(it.code)) return false;
+    if (ui.q){
+      const hay = (it.code+" "+it.description+" "+it.strand+" "+it.substrand+" "+
+        recs(it.code).map(r=>[r.assessment,r.cls,r.notes].join(" ")).join(" ")).toLowerCase();
+      if (!hay.includes(ui.q.toLowerCase())) return false;
+    }
+    return true;
+  }
+  const doneIn = list => list.filter(it=>isDone(it.code)).length;
+
+  /* ---- summary: descriptive, not a completion target ---- */
+  function renderSummary(){
+    const scope = ITEMS.filter(it => visibleLevels().includes(it.level) && (!ui.strand || it.strand===ui.strand));
+    const rows = [];
+    scope.forEach(it => inScopeRecs(it.code).forEach(r => rows.push(r)));
+    const tasks = new Set(rows.map(r=>r.assessment));
+    const withNotes = rows.filter(r => r.notes).length;
+    const revisited = scope.filter(it => inScopeRecs(it.code).length > 1).length;
+    const filterLabel = [ui.level?"Level "+ui.level:"", ui.strand, ui.cls].filter(Boolean).join(" · ");
+    const tile = (n,l) => '<div class="tile"><b>'+n+'</b><span>'+l+'</span></div>';
+    let h = '<div class="summary"><div class="tiles">';
+    h += tile(doneIn(scope), "content descriptions assessed");
+    h += tile(tasks.size, "assessment task"+(tasks.size===1?"":"s"));
+    h += tile(rows.length, "record"+(rows.length===1?"":"s"));
+    h += tile(withNotes, "with evidence notes");
+    h += tile(revisited, "revisited more than once");
+    h += '</div><div class="ethos">'+
+      '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">'+
+      '<circle cx="12" cy="12" r="9"/><path d="M12 16v-5M12 8h.01"/></svg>'+
+      '<span>Depth over coverage. This is a record of what you assessed and how well — not a checklist to finish.'+
+      (filterLabel ? ' Showing '+esc(filterLabel)+'.' : '')+'</span></div></div>';
+    $("progress").innerHTML = h;
+  }
+
+  /* ---- curriculum matrix (mirrors the VCAA document layout) ---- */
+  function renderMatrix(){
+    const lv = visibleLevels();
+    let html = "", any = false;
+    STRANDS.forEach(strand => {
+      if (ui.strand && ui.strand !== strand) return;
+      const inStrand = ITEMS.filter(it => it.strand===strand && lv.includes(it.level));
+      const shown = inStrand.filter(matches);
+      if (!shown.length) return;
+      any = true;
+      const dS = doneIn(inStrand);
+      html += '<section class="strand"><div class="strand-head"><h2>'+strand+'</h2>'+
+              '<span class="of">'+(dS ? dS+' assessed' : 'nothing recorded yet')+'</span></div>'+
+              '<div class="grid" style="grid-template-columns:repeat('+lv.length+',minmax(0,1fr))">';
+      lv.forEach(l => { html += '<div class="colhead">Level '+l+'</div>'; });
+      const subs = [...new Set(inStrand.map(it=>it.substrand))];
+      subs.forEach(sub => {
+        const inSub = inStrand.filter(it=>it.substrand===sub);
+        const shownSub = inSub.filter(matches);
+        if (!shownSub.length) return;
+        const dSub = doneIn(inSub);
+        html += '<div class="band"><h3>'+esc(sub)+'</h3><span class="rule"></span>'+
+                (dSub ? '<span class="of">'+dSub+' assessed</span>' : '')+'</div>';
+        const seqs = [...new Set(inSub.map(it=>seqOf(it.code)))].sort((a,b)=>a-b);
+        seqs.forEach(n => {
+          const row = inSub.filter(it=>seqOf(it.code)===n);
+          if (!row.some(matches)) return;
+          lv.forEach(l => {
+            const it = row.find(x=>x.level===l);
+            html += (it && matches(it)) ? cell(it) : '<div class="cell blank" aria-hidden="true"></div>';
+          });
+        });
+      });
+      html += '</div></section>';
+    });
+    return any ? html : '<div class="empty-state">No content descriptions match these filters.</div>';
+  }
+
+  function cell(it){
+    const rs = inScopeRecs(it.code);
+    const done = rs.length > 0;
+    const names = [...new Set(rs.map(r=>r.assessment))];
+    const noted = rs.some(r=>r.notes);
+    let h = '<button class="cell'+(done?" done":"")+'" data-code="'+it.code+'" data-level="Level '+it.level+'">';
+    h += '<span class="row1"><span class="code">'+it.code+'</span><span class="tick">';
+    if (done){
+      h += '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m5 13 4.5 4.5L19 7"/></svg>'+
+        (rs.length>1 ? rs.length+" records" : "assessed");
+      if (noted) h += '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:2px;opacity:.7"><path d="M4 4h16v12l-4 4H4z"/><path d="M8 9h8M8 13h5"/></svg>';
+    }
+    h += '</span></span>';
+    h += '<span class="cd-text">'+esc(it.description)+'</span>';
+    if (names.length) h += '<span class="tags">'+names.slice(0,3).map(n=>'<span class="tag">'+esc(n)+'</span>').join("")+
+      (names.length>3 ? '<span class="tag">+'+(names.length-3)+'</span>' : '')+'</span>';
+    return h + '</button>';
+  }
+
+  /* ---- by assessment ---- */
+  function renderAssessments(){
+    const by = {};
+    ITEMS.forEach(it => {
+      if (ui.level && it.level!==ui.level) return;
+      if (ui.strand && it.strand!==ui.strand) return;
+      recs(it.code).forEach(r => {
+        if (ui.cls && r.cls!==ui.cls) return;
+        if (ui.q){
+          const hay = (r.assessment+" "+(r.cls||"")+" "+(r.notes||"")+" "+it.code+" "+it.description).toLowerCase();
+          if (!hay.includes(ui.q.toLowerCase())) return;
+        }
+        const k = r.assessment+"||"+(r.cls||"")+"||"+(r.date||"");
+        (by[k] = by[k] || {assessment:r.assessment, cls:r.cls, date:r.date, notes:[], items:[]});
+        by[k].items.push(it);
+        if (r.notes) by[k].notes.push(it.code+" — "+r.notes);
+      });
+    });
+    const groups = Object.values(by).sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+    if (!groups.length) return '<div class="empty-state">No assessment records yet. Open a content description in the Curriculum view to add one.</div>';
+    return '<div class="alist">'+groups.map(g => {
+      const lvls = [...new Set(g.items.map(i=>"Lv "+i.level))].join(", ");
+      return '<div class="acard"><h4>'+esc(g.assessment)+'</h4><div class="meta">'+
+        [fmtDate(g.date), g.cls||"no class", lvls,
+         g.items.length+" content description"+(g.items.length===1?"":"s")].filter(Boolean).map(esc).join(" · ")+
+        '</div><div class="codes">'+
+        g.items.sort((a,b)=>a.code.localeCompare(b.code))
+          .map(i=>'<span class="code" title="'+esc(i.description)+'">'+i.code+'</span>').join("")+
+        '</div>'+(g.notes.length?'<div class="note">'+esc(g.notes.join(" · "))+'</div>':'')+'</div>';
+    }).join("")+'</div>';
+  }
+  function fmtDate(d){
+    if (!d) return "";
+    const p = d.split("-"); if (p.length!==3) return d;
+    const m = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    return +p[2]+" "+m[+p[1]-1]+" "+p[0];
+  }
+
+  /* ---- drawer ---- */
+  function openDrawer(code){
+    ui.code = code;
+    const it = byCode[code]; if (!it) return;
+    const rs = recs(code).slice().sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+    let h = '<div class="drawer-top"><div class="crumb">Level '+it.level+' · '+esc(it.strand)+' · '+esc(it.substrand)+'</div>'+
+      '<div class="row1"><span class="code">'+code+'</span>'+
+      '<span class="tick" style="margin-left:0;color:'+(rs.length?"var(--done)":"var(--muted)")+'">'+
+      (rs.length ? rs.length+" record"+(rs.length===1?"":"s") : "no records yet")+'</span>'+
+      '<button class="close" id="closeDrawer" aria-label="Close">&times;</button></div>'+
+      '<p>'+esc(it.description)+'</p></div><div class="drawer-body">';
+    h += '<h5>Assessment records</h5>';
+    if (rs.length){
+      rs.forEach(r => {
+        h += '<div class="rec"><div class="r1"><b>'+esc(r.assessment)+'</b>'+
+          '<button class="x" data-del="'+r.id+'">Remove</button></div>'+
+          '<div class="m">'+[fmtDate(r.date)||"no date", r.cls||"no class"].map(esc).join(" · ")+'</div>'+
+          (r.notes?'<div class="n">'+esc(r.notes)+'</div>':'')+'</div>';
+      });
+    } else {
+      h += '<p class="none">Nothing recorded against this content description yet.</p>';
+    }
+    h += '<hr class="divider"><h5>Add a record</h5><form class="add" id="addForm">'+
+      '<div><label for="f-a">Assessment name</label>'+
+      '<input id="f-a" name="assessment" type="text" list="assessList" placeholder="e.g. Persuasive essay — Unit 2" required></div>'+
+      '<div class="two"><div><label for="f-d">Date</label><input id="f-d" name="date" type="date" value="'+
+        new Date().toISOString().slice(0,10)+'"></div>'+
+      '<div><label for="f-c">Class / cohort</label><input id="f-c" name="cls" type="text" list="classList" placeholder="e.g. 9C" value="'+esc(ui.cls)+'"></div></div>'+
+      '<div><label for="f-n">Notes / evidence</label><textarea id="f-n" name="notes" placeholder="How was this assessed? What did students produce?"></textarea></div>'+
+      '<button class="btn primary" type="submit" style="justify-self:start">Mark as assessed</button></form></div>';
+    const d = $("drawer");
+    d.innerHTML = h; d.classList.add("on"); d.setAttribute("aria-hidden","false");
+    $("veil").classList.add("on");
+    setTimeout(()=>{ const el = $("f-a"); if (el) el.focus(); }, 220);
+  }
+  function closeDrawer(){
+    ui.code = null;
+    $("drawer").classList.remove("on"); $("drawer").setAttribute("aria-hidden","true");
+    $("veil").classList.remove("on");
+  }
+
+  /* ---- render ---- */
+  function render(){
+    renderSummary();
+    $("content").innerHTML = ui.view === "assessments" ? renderAssessments() : renderMatrix();
+    const cls = new Set(), ass = new Set();
+    Object.values(coverage).forEach(a => a.forEach(r => { if (r.cls) cls.add(r.cls); ass.add(r.assessment); }));
+    $("classList").innerHTML = [...cls].sort().map(c=>'<option value="'+esc(c)+'">').join("");
+    $("assessList").innerHTML = [...ass].sort().map(c=>'<option value="'+esc(c)+'">').join("");
+    const sel = $("classSel");
+    sel.innerHTML = '<option value="">All classes</option>' +
+      [...cls].sort().map(c=>'<option'+(c===ui.cls?" selected":"")+'>'+esc(c)+'</option>').join("");
+    $("foot").textContent = "Records live in data/coverage.json in the repo, shared by every device · "+DATA.source;
+    if (ui.code) openDrawer(ui.code);
+  }
+
+  /* ---- events ---- */
+  document.addEventListener("click", e => {
+    const c = e.target.closest(".cell[data-code]");
+    if (c){ openDrawer(c.getAttribute("data-code")); return; }
+    if (e.target.closest("#closeDrawer")){ closeDrawer(); return; }
+    const del = e.target.closest("[data-del]");
+    if (del && ui.code){
+      const code = ui.code, id = del.getAttribute("data-del");
+      coverage[code] = recs(code).filter(r=>r.id!==id);
+      if (!coverage[code].length) delete coverage[code];
+      save(); render(); queuePush(); toast("Record removed."); return;
+    }
+    if (!e.target.closest(".menu-host")) $("dataMenu").classList.remove("open");
+  });
+  $("veil").addEventListener("click", closeDrawer);
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape"){ closeDrawer(); $("dataMenu").classList.remove("open");
+      $("tokenVeil").classList.remove("on"); }
+  });
+  document.addEventListener("submit", e => {
+    if (!e.target.closest("#addForm")) return;
+    e.preventDefault();
+    const f = e.target, code = ui.code;
+    const g = n => (f.querySelector('[name='+n+']').value||"").trim();
+    const name = g("assessment"); if (!name || !code) return;
+    (coverage[code] = coverage[code] || []).push({id:uid(), assessment:name, date:g("date"), cls:g("cls"), notes:g("notes")});
+    save(); render(); queuePush(); toast("Recorded against "+code+".");
+  });
+  $("dataBtn").addEventListener("click", e => {
+    e.stopPropagation();
+    const m = $("dataMenu"); const open = m.classList.toggle("open");
+    $("dataBtn").setAttribute("aria-expanded", open ? "true" : "false");
+  });
+
+  function bindSeg(id, key){
+    $(id).addEventListener("click", e => {
+      const b = e.target.closest("button"); if (!b) return;
+      [...b.parentElement.children].forEach(x=>x.classList.remove("on"));
+      b.classList.add("on");
+      ui[key] = b.dataset[key] !== undefined ? b.dataset[key] : b.dataset.val;
+      render();
+    });
+  }
+  function download(name, text, type){
+    const blob = new Blob([text],{type:type+";charset=utf-8"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob); a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>{ try{ URL.revokeObjectURL(a.href); }catch(e){} }, 2000);
+  }
+  function syncHdr(){
+    const h = document.querySelector("header").offsetHeight;
+    document.documentElement.style.setProperty("--hdr", h+"px");
+  }
+
+  function init(){
+    $("levelSeg").innerHTML = '<button data-val="" class="on">All levels</button>' +
+      LEVELS.map(l=>'<button data-val="'+l+'">Level '+l+'</button>').join("");
+    $("strandSel").innerHTML = '<option value="">All strands</option>' + STRANDS.map(s=>'<option>'+s+'</option>').join("");
+    bindSeg("levelSeg","level"); bindSeg("viewSeg","view");
+    $("strandSel").onchange = e => { ui.strand = e.target.value; render(); };
+    $("statusSel").onchange = e => { ui.status = e.target.value; render(); };
+    $("classSel").onchange = e => { ui.cls = e.target.value; render(); };
+    let tm; $("q").oninput = e => { clearTimeout(tm); const v = e.target.value.trim();
+      tm = setTimeout(()=>{ ui.q = v; render(); }, 180); };
+
+    $("exportBtn").onclick = () => { $("dataMenu").classList.remove("open");
+      download("coverage.json", JSON.stringify({version:1,updated:new Date().toISOString(),coverage},null,1), "application/json");
+      toast("Exported — commit this as data/coverage.json."); };
+    $("csvBtn").onclick = () => { $("dataMenu").classList.remove("open");
+      const rows = [["code","level","strand","substrand","description","assessment","date","class","notes"]];
+      ITEMS.forEach(it => { const rs = recs(it.code);
+        if (!rs.length) rows.push([it.code,it.level,it.strand,it.substrand,it.description,"","","",""]);
+        else rs.forEach(r=>rows.push([it.code,it.level,it.strand,it.substrand,it.description,r.assessment,r.date,r.cls,r.notes]));
+      });
+      download("english-7-10-coverage.csv",
+        rows.map(r=>r.map(c=>'"'+String(c==null?"":c).replace(/"/g,'""')+'"').join(",")).join("\r\n"), "text/csv");
+    };
+    $("importBtn").onclick = () => { $("dataMenu").classList.remove("open"); $("fileIn").click(); };
+    $("fileIn").onchange = e => {
+      const f = e.target.files[0]; if (!f) return;
+      const fr = new FileReader();
+      fr.onload = () => { try{
+          const j = JSON.parse(fr.result), c = j.coverage || j;
+          if (typeof c !== "object" || Array.isArray(c)) throw new Error("unexpected format");
+          coverage = c; save(); render(); queuePush(); toast("Imported "+f.name+".");
+        }catch(err){ toast("Couldn't import that file: "+err.message); } };
+      fr.readAsText(f); e.target.value = "";
+    };
+    $("repoBtn").onclick = () => { $("dataMenu").classList.remove("open");
+      if (!confirm("Discard the records in this browser and load the repo copy instead?")) return;
+      pull({replace:true}).then(ok => toast(ok===false ? "Couldn't read the shared copy." : "Loaded the shared copy."));
+    };
+    $("syncNowBtn").onclick = () => { $("dataMenu").classList.remove("open");
+      (sync.dirty && canWrite() ? push() : pull({})).then(() => toast(canWrite() ? "Synced." : "Refreshed the shared records (read-only on this device)."));
+    };
+    $("clearBtn").onclick = () => { $("dataMenu").classList.remove("open");
+      if (!confirm("Delete every assessment record"+(canWrite()?", on every device":" in this browser")+"? Export first if you want a backup.")) return;
+      coverage = {}; save(); render(); queuePush(); toast("All records cleared."); };
+
+    /* passphrase modal */
+    const openToken = () => { $("dataMenu").classList.remove("open");
+      $("tokenBlurb").textContent = configured()
+        ? "Records are shared by every device that opens the site. Viewing needs nothing. To add or remove records, enter the passphrase set on the sync worker — once per device, then it's remembered."
+        : "Sharing isn't switched on yet: SYNC_URL in index.html is still empty, so records stay in this browser. Deploy the worker in worker/worker.js and paste its URL there — the README has the steps.";
+      $("tokenIn").disabled = !configured();
+      $("tokenSave").disabled = !configured();
+      $("tokenErr").style.display = "none"; $("tokenIn").value = "";
+      $("tokenVeil").classList.add("on");
+      if (configured()) setTimeout(()=>$("tokenIn").focus(), 60); };
+    const closeToken = () => $("tokenVeil").classList.remove("on");
+    $("connectBtn").onclick = openToken;
+    $("syncChip").onclick = () => { if (!canWrite()) openToken(); else $("syncNowBtn").onclick(); };
+    $("tokenCancel").onclick = closeToken;
+    $("tokenVeil").addEventListener("click", e => { if (e.target === $("tokenVeil")) closeToken(); });
+    $("tokenIn").addEventListener("keydown", e => { if (e.key === "Enter") $("tokenSave").click(); });
+    $("tokenForget").onclick = () => { setPass(""); setSync("local","Read-only"); closeToken();
+      toast("Saving switched off here. Records stay visible on this device."); };
+    $("tokenSave").onclick = () => {
+      const p = $("tokenIn").value.trim();
+      const err = m => { const e = $("tokenErr"); e.textContent = m; e.style.display = "block"; };
+      if (!p) return err("Enter the passphrase first.");
+      $("tokenSave").disabled = true;
+      const prev = getPass(); setPass(p);
+      push().then(ok => {
+        $("tokenSave").disabled = false;
+        if (!ok){ setPass(prev); return err("That passphrase was rejected."); }
+        closeToken(); toast("Saving enabled. Changes here now reach every device.");
+      });
+    };
+
+    loadSeen();
+    const hadLocal = load();
+    setSync(canWrite() ? "idle" : "local", "Loading…");
+    render(); syncHdr();
+    window.addEventListener("resize", syncHdr);
+    pull({replace: !hadLocal}).then(() => { if (sync.dirty && canWrite()) push(); });
+    startPolling();
+    setInterval(() => { if (sync.state==="ok") setSync("ok", agoText()); }, 30000);
+    window.addEventListener("beforeunload", e => {
+      if (sync.dirty && canWrite()){ e.preventDefault(); e.returnValue = ""; }
+    });
+  }
+  init();
+})();
+</script>
+</body>
+</html>
