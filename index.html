@@ -5,39 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>NMO-SOC</title>
 <meta name="description" content="Guides, tools and resources for English and Humanities.">
-<meta name="theme-color" content="#8E3122">
-
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="NMO-SOC">
-<meta property="og:url" content="https://nmo-soc.github.io/">
-<meta property="og:title" content="NMO-SOC">
-<meta property="og:description" content="Guides, tools and resources for English and Humanities.">
-<meta property="og:image" content="https://nmo-soc.github.io/og.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="NMO-SOC, with the day's date in the Roman calendar.">
-<meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23E8DFC8'/%3E%3Cpath d='M16 5C12 10 5 11 5 16c0 4 4 5 6 3-1 3 1 5 5 8 4-3 6-5 5-8 2 2 6 1 6-3 0-5-7-6-11-11z' fill='%238E3122'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#E5E1D6">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23E5E1D6'/%3E%3Cpath d='M16 9l4 7-4 7-4-7z' fill='%23A63A24'/%3E%3C/svg%3E">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&family=Marcellus&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 
 <style>
   :root{
-    /* The pigments of a Roman wall: lime plaster, cinnabar red,
-       Egyptian blue, yellow ochre, and lampblack. */
-    --plaster:#E8DFC8;
-    --plaster-dim:#CFC2A4;
-    --pompeian:#8E3122;
-    --pompeian-lit:#A33B29;
-    --ink:#241C17;
-    --ink-soft:#5C4E42;
-    --ochre:#EFCB84;
-    --blue:#2E4C6D;
-
-    --display:"Marcellus",Georgia,serif;
-    --text:"Cardo",Georgia,serif;
+    /* Limestone, the shadow inside a carved letter, and minium — the red
+       lead with which the letters of a Roman inscription were painted. */
+    --stone:#E5E1D6;
+    --ink:#2B2620;
+    --ink-soft:#5F5952;
+    --rule:#CBC4B4;
+    --minium:#A63A24;
+    --caps:"Cinzel",Georgia,serif;
+    --text:"EB Garamond",Georgia,serif;
   }
 
   *,*::before,*::after{box-sizing:border-box}
@@ -46,7 +31,7 @@
 
   body{
     margin:0;
-    background:var(--plaster);
+    background:var(--stone);
     color:var(--ink);
     font-family:var(--text);
     font-size:19px;
@@ -54,253 +39,215 @@
     -webkit-font-smoothing:antialiased;
   }
 
-  /* ================= the banner: the dated architrave ================= */
-  .banner{
-    background:var(--pompeian);
-    color:var(--plaster);
-    border-bottom:3px double var(--ochre);
-    padding:.85rem 1.25rem .8rem;
+  /* ---- the sheet: content sits to the right of a ruled margin ---- */
+  .sheet{
+    max-width:62rem;
+    margin:0 auto;
+    padding:clamp(3rem,9vw,5.5rem) 2rem 5rem 12rem;
+    background-image:linear-gradient(var(--rule),var(--rule));
+    background-repeat:no-repeat;
+    background-size:1px 100%;
+    background-position:10.5rem 0;
   }
 
-  .banner-inner{
-    max-width:56rem;
-    margin:0 auto;
+  /* ---- anything set out in the ruled margin ---- */
+  .margin-note{
+    position:absolute;
+    left:-12rem;
+    width:9.75rem;
+    text-align:right;
+    font-family:var(--caps);
+    font-weight:400;
+    font-size:.66rem;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+
+  /* ---- titulus: the inscribed heading ---- */
+  .titulus{
+    margin:0 0 clamp(2.25rem,5vw,3rem);
+    padding-bottom:1.1rem;
+    border-bottom:1px solid var(--rule);
+    font-family:var(--caps);
+    font-weight:600;
+    font-size:clamp(1.45rem,4.2vw,2.15rem);
+    line-height:1.2;
+    letter-spacing:.3em;
+    color:var(--minium);
+  }
+
+  /* ---- numerals are rubricated, as in a ruled manuscript ---- */
+  .num{color:var(--minium);letter-spacing:.04em}
+
+  /* ---- the dateline ---- */
+  /* ---- the dateline: a compact strip, deliberately small ---- */
+  .fasti{position:relative;margin:0 0 clamp(1.75rem,4.5vw,2.5rem)}
+  .fasti .margin-note{margin:.2rem 0 0}
+
+  .fasti-primary{
+    font-size:1.15rem;
+    line-height:1.4;
+    margin:0 0 .15rem;
+  }
+
+  .fasti-secondary{
+    margin:0 0 .45rem;
+    font-size:.85rem;
+    line-height:1.5;
+    color:var(--ink-soft);
+  }
+  .fasti-secondary [title]{cursor:help}
+
+  .sep{color:var(--rule);padding:0 .3em}
+
+  .computus{
     display:flex;
     flex-wrap:wrap;
-    justify-content:center;
-    align-items:baseline;
-    column-gap:.75rem;
-    row-gap:.15rem;
-    font-size:.76rem;
-    letter-spacing:.05em;
-    line-height:1.7;
-    text-align:center;
-  }
-
-  .banner-inner > span:not(:last-child)::after{
-    content:"\00B7";
-    padding-left:.75rem;
-    color:var(--pompeian-lit);
-  }
-
-  .banner .lbl{
-    font-family:var(--display);
-    font-size:.62rem;
-    letter-spacing:.15em;
-    text-transform:uppercase;
-    color:var(--plaster-dim);
-    padding-right:.25em;
-  }
-
-  .banner [title]{cursor:help}
-
-  .banner-now{
-    font-size:.86rem;
-    padding-bottom:.35rem;
-    margin-bottom:.35rem;
-    border-bottom:1px solid rgba(239,203,132,.28);
-  }
-  .banner-day{font-size:.74rem}
-
-  #clock.unsynced{opacity:.7;text-decoration:underline dotted}
-  #clock-ms{opacity:.62;font-size:.86em}
-
-  #clock{
-    color:var(--ochre);
-    letter-spacing:.09em;
-    font-variant-numeric:tabular-nums;
-    font-feature-settings:"tnum";
-  }
-
-  /* numerals stand out in gold on the banner, in red on the plaster */
-  .num{color:var(--num,var(--pompeian));letter-spacing:.05em}
-  .banner{--num:var(--ochre)}
-
-  /* ================= the field ================= */
-  .field{
-    max-width:56rem;
-    margin:0 auto;
-    padding:clamp(2.75rem,7vw,4.5rem) 1.5rem clamp(3rem,7vw,4.5rem);
-    text-align:center;
-  }
-
-  .titulus{
-    font-family:var(--display);
-    font-weight:400;
-    font-size:clamp(2.1rem,7vw,3.5rem);
-    line-height:1.15;
-    letter-spacing:.26em;
-    text-indent:.26em;
+    gap:.1rem .9rem;
     margin:0;
-    color:var(--ink);
+    padding:0;
+  }
+  .computus > div{display:flex;align-items:baseline;gap:.35rem}
+  .computus dt{
+    font-family:var(--caps);
+    font-size:.55rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin:0;
+  }
+  .computus dd{
+    margin:0;
+    font-size:.82rem;
+    line-height:1.45;
+    color:var(--minium);
+    letter-spacing:.04em;
   }
 
-  /* the hedera: the ivy leaf Roman cutters used to divide a line */
-  .hedera{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:1.1rem;
-    margin:1.5rem auto 1.75rem;
-    max-width:15rem;
-  }
-  .hedera::before,
-  .hedera::after{
-    content:"";
-    flex:1;
-    height:1px;
-    background:var(--plaster-dim);
-  }
-  .hedera svg{width:19px;height:19px;fill:var(--pompeian);flex:none}
-
+  /* ---- statement of purpose ---- */
   .thesis{
-    font-family:var(--display);
-    font-size:clamp(1.15rem,2.9vw,1.5rem);
-    line-height:1.4;
-    margin:0 auto .55rem;
+    font-weight:400;
+    font-size:clamp(1.3rem,3.1vw,1.7rem);
+    line-height:1.28;
+    margin:0 0 .45rem;
     max-width:26ch;
   }
 
   .lede{
-    margin:0 auto clamp(2.5rem,6vw,3.5rem);
-    max-width:40ch;
-    font-size:.95rem;
-    font-style:italic;
+    margin:0 0 clamp(2.25rem,5.5vw,3.25rem);
+    max-width:44ch;
     color:var(--ink-soft);
+    font-size:.97rem;
   }
 
-  /* ================= the panels: every one the same size ================= */
-  .panels{
+  /* ---- shelves ---- */
+  .shelf{position:relative;margin-bottom:clamp(3rem,7vw,4.5rem)}
+  .shelf .margin-note{margin:.7rem 0 0}
+
+  .entry{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(min(24rem,100%),1fr));
-    gap:1.4rem;
-    margin:0;
-    padding:0;
-    list-style:none;
-  }
-
-  .panel{
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    gap:.7rem;
-    height:100%;
-    min-height:14rem;
-    container-type:inline-size;
-    padding:clamp(2rem,4.5vw,2.85rem) 1.35rem;
-    background:var(--pompeian);
-    color:var(--plaster);
-    border:1px solid var(--ochre);
-    outline:1px solid var(--pompeian);
-    outline-offset:4px;
+    grid-template-columns:1fr auto;
+    gap:.1rem 1.5rem;
+    align-items:baseline;
+    padding:clamp(1.8rem,4vw,2.6rem) 0;
+    border-top:1px solid var(--rule);
     text-decoration:none;
-    transition:background .35s,outline-color .35s;
+    color:inherit;
+    transition:border-color .3s;
+  }
+  .shelf .entry:last-child{border-bottom:1px solid var(--rule)}
+
+  .entry-name{
+    font-size:clamp(1.85rem,5vw,2.8rem);
+    font-weight:500;
+    line-height:1.12;
+    letter-spacing:-.015em;
+    transition:color .3s;
   }
 
-  .panel-name{
-    font-family:var(--display);
-    line-height:1.2;
-    letter-spacing:.08em;
-    text-transform:uppercase;
-    overflow-wrap:break-word;
-    /* fallback for browsers without container queries */
-    font-size:clamp(1.05rem,2.4vw,1.3rem);
-    /* sized against the width of the tile itself, so a long word fits */
-    font-size:clamp(1rem,6.8cqi,1.45rem);
+  .entry-arrow{
+    font-size:1.6rem;
+    color:var(--ink-soft);
+    transition:transform .3s cubic-bezier(.2,.7,.3,1),color .3s;
   }
 
-  .panel-note{
-    font-size:.92rem;
-    line-height:1.55;
-    color:var(--plaster-dim);
-    max-width:32ch;
-    margin:0 auto;
+  .entry-note{
+    grid-column:1/2;
+    margin-top:.5rem;
+    color:var(--ink-soft);
+    font-size:1.02rem;
+    max-width:50ch;
   }
 
-  .panel-tag{
-    font-family:var(--display);
+  .entry-tag{
+    grid-column:2/3;
+    font-family:var(--caps);
     font-size:.6rem;
-    letter-spacing:.2em;
+    letter-spacing:.14em;
     text-transform:uppercase;
-    color:var(--ochre);
+    color:var(--ink-soft);
+    white-space:nowrap;
   }
 
-  .panel:hover,
-  .panel:focus-visible{background:var(--pompeian-lit);outline-color:var(--ochre)}
-  .panel:focus-visible{outline-width:2px}
+  .entry:hover,
+  .entry:focus-visible{border-top-color:var(--minium)}
+  .entry:hover .entry-name,
+  .entry:focus-visible .entry-name,
+  .entry:hover .entry-arrow,
+  .entry:focus-visible .entry-arrow{color:var(--minium)}
+  .entry:hover .entry-arrow,
+  .entry:focus-visible .entry-arrow{transform:translateX(.35rem)}
 
-  /* ================= ratio calculandi ================= */
+  .entry:focus-visible{outline:2px solid var(--ink);outline-offset:8px}
+
+  /* ---- ratio calculandi: how the dateline is worked out ---- */
   .ratio-section{
-    margin:clamp(2.75rem,7vw,4rem) auto 0;
-    padding-top:1.5rem;
-    border-top:3px double var(--plaster-dim);
-    text-align:left;
+    margin-top:clamp(2rem,5vw,3rem);
+    padding-top:1.4rem;
+    border-top:1px solid var(--rule);
   }
-
   .ratio-section > summary{
     list-style:none;
     cursor:pointer;
-    text-align:center;
-    font-family:var(--display);
-    font-size:.64rem;
-    letter-spacing:.2em;
+    font-family:var(--caps);
+    font-size:.6rem;
+    letter-spacing:.16em;
     text-transform:uppercase;
     color:var(--ink-soft);
     transition:color .3s;
   }
   .ratio-section > summary::-webkit-details-marker{display:none}
-  .ratio-section > summary::after{content:"  +";color:var(--pompeian)}
-  .ratio-section[open] > summary::after{content:"  \2013"}
+  .ratio-section > summary::after{content:" +";color:var(--minium)}
+  .ratio-section[open] > summary::after{content:" \2013"}
   .ratio-section > summary:hover,
-  .ratio-section > summary:focus-visible{color:var(--pompeian)}
-  .ratio-section[open] > summary{margin-bottom:1.9rem}
+  .ratio-section > summary:focus-visible{color:var(--minium)}
+  .ratio-section[open] > summary{margin-bottom:1.7rem}
 
   .ratio-intro{
-    margin:0 auto 1rem;
+    margin:0 0 1.1rem;
     max-width:46ch;
-    text-align:center;
-    font-size:.95rem;
-    font-style:italic;
+    font-size:1rem;
     color:var(--ink-soft);
   }
-
-  .lang-toggle{
-    display:block;
-    margin:0 auto 2.25rem;
-    padding:0 0 .2rem;
-    border:0;
-    border-bottom:1px solid var(--plaster-dim);
-    background:none;
-    font-family:var(--display);
-    font-size:.6rem;
-    letter-spacing:.18em;
-    text-transform:uppercase;
-    color:var(--ink-soft);
-    cursor:pointer;
-    transition:color .3s,border-color .3s;
-  }
-  .lang-toggle:hover,
-  .lang-toggle:focus-visible{color:var(--pompeian);border-bottom-color:var(--pompeian)}
-  .lang-toggle:focus-visible{outline:2px solid var(--ink);outline-offset:6px}
 
   .ratio{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(16.5rem,1fr));
-    gap:1.9rem 2.75rem;
+    grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));
+    gap:1.85rem 2.75rem;
     margin:0;
   }
   .ratio dt{
-    font-family:var(--display);
-    font-size:.62rem;
-    letter-spacing:.17em;
+    font-family:var(--caps);
+    font-size:.6rem;
+    letter-spacing:.16em;
     text-transform:uppercase;
-    color:var(--pompeian);
-    margin:0 0 .4rem;
+    margin:0 0 .45rem;
   }
   .ratio dd{
     margin:0;
-    font-size:.92rem;
-    line-height:1.6;
+    font-size:.94rem;
+    line-height:1.55;
     color:var(--ink-soft);
   }
   .formula{
@@ -311,33 +258,59 @@
   }
 
   .ratio-source{
-    margin:2.5rem auto 0;
-    max-width:52ch;
-    text-align:center;
-    font-size:.84rem;
+    margin:2.5rem 0 0;
+    font-size:.85rem;
     color:var(--ink-soft);
   }
-  .ratio-source a{color:var(--pompeian);text-underline-offset:.2em}
+  .ratio-source a{color:var(--ink-soft);text-underline-offset:.2em}
 
-  /* Latin shows by default; the toggle swaps in the English. */
+  /* Latin is shown by default; the toggle swaps in the English. */
   .ratio-section [lang="en"]{display:none}
   body[data-ratio="en"] .ratio-section [lang="en"]{display:block}
   body[data-ratio="en"] .ratio-section [lang="la"]{display:none}
 
-  /* ================= detail ================= */
-  a:focus-visible,
-  summary:focus-visible{outline:2px solid var(--ink);outline-offset:4px}
+  .lang-toggle{
+    display:inline-block;
+    margin:0 0 2rem;
+    padding:0 0 .2rem;
+    border:0;
+    border-bottom:1px solid var(--rule);
+    background:none;
+    font-family:var(--caps);
+    font-size:.58rem;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    cursor:pointer;
+    transition:color .3s,border-color .3s;
+  }
+  .lang-toggle:hover,
+  .lang-toggle:focus-visible{color:var(--minium);border-bottom-color:var(--minium)}
+  .lang-toggle:focus-visible{outline:2px solid var(--ink);outline-offset:6px}
 
+  /* ---- the page settles into place, quietly ---- */
   .rise{animation:rise .8s cubic-bezier(.2,.7,.3,1) both}
-  .rise-2{animation-delay:.1s}
-  .rise-3{animation-delay:.2s}
-  @keyframes rise{from{opacity:0;transform:translateY(.5rem)}to{opacity:1;transform:none}}
+  .rise-2{animation-delay:.12s}
+  .rise-3{animation-delay:.24s}
+  @keyframes rise{from{opacity:0;transform:translateY(.6rem)}to{opacity:1;transform:none}}
 
-  @media (max-width:640px){
-    body{font-size:18px}
-    .titulus{letter-spacing:.18em;text-indent:.18em}
-    .banner-inner{font-size:.72rem;column-gap:.6rem}
-    .banner-inner > span:not(:last-child)::after{padding-left:.6rem}
+  /* ---- narrow screens: the ruled margin folds away ---- */
+  @media (max-width:760px){
+    .sheet{
+      padding:2.5rem 1.35rem 3.5rem;
+      background-image:none;
+    }
+    .margin-note{
+      position:static;
+      width:auto;
+      text-align:left;
+      margin:0 0 .9rem!important;
+    }
+    .titulus{letter-spacing:.22em}
+    .entry{grid-template-columns:1fr;gap:.3rem}
+    .entry-arrow{display:none}
+    .entry-tag{grid-column:1/2}
+    .thesis{max-width:none}
   }
 
   @media (prefers-reduced-motion:reduce){
@@ -347,74 +320,98 @@
 </head>
 
 <body>
+<div class="sheet">
 
-<header class="banner">
-  <div class="banner-inner banner-now" aria-label="The time now, in Roman hours">
-    <span title="International Atomic Time, 37 seconds ahead of UTC, shown at the local offset."><span class="lbl">TAI</span><time id="clock"><span id="clock-hms">--:--:--</span><span id="clock-ms">.---</span></time></span>
-    <span lang="la" id="hora" title="The hour of the natural day: sunrise to sunset divided into twelve, and the night likewise.">&mdash;</span>
-    <span lang="la" id="vigilia" title="The watch of the night: sunset to sunrise divided into four. Shown only after dark.">&mdash;</span>
-    <span lang="la" id="pars-diei" title="The division of the civil day, midnight to midnight, by its old Latin name.">&mdash;</span>
-  </div>
+  <header>
 
-  <div class="banner-inner banner-day" aria-label="Today's date in the Roman calendar">
-    <span lang="la" id="roman-date">&mdash;</span>
-    <span lang="la"><span id="auc-year">&mdash;</span> A.U.C.</span>
-    <span lang="la" title="The sun's place in the zodiac, reckoned as Pliny and Columella reckoned it, with the equinox falling in the eighth degree of Aries.">Sol <span id="sol-signum">&mdash;</span></span>
-    <span lang="la" id="latin-weekday">&mdash;</span>
-    <span title="Nundinal letter: the eight-day market cycle, lettered A to H from 1 January."><span class="lbl">Nundinae</span><span id="c-nundinae">&mdash;</span></span>
-    <span title="Golden Number: the year's place in the 19-year lunar cycle."><span class="lbl">Aureus Numerus</span><span id="c-aureus">&mdash;</span></span>
-    <span title="Epact: the age of the moon on 1 January. Thirty is written as an asterisk."><span class="lbl">Epacta</span><span id="c-epacta">&mdash;</span></span>
-    <span title="Roman Indiction: a 15-year civil cycle used for dating documents."><span class="lbl">Indictio</span><span id="c-indictio">&mdash;</span></span>
-    <span title="Solar Cycle: the 28-year period after which the weekdays fall on the same dates."><span class="lbl">Cyclus Solaris</span><span id="c-cyclus">&mdash;</span></span>
-  </div>
-</header>
+    <h1 class="titulus rise">NMO &middot; SOC</h1>
 
-<main class="field">
+    <section class="fasti rise rise-2" aria-label="Today's date in the Roman calendar">
+      <p class="margin-note">Hodie</p>
 
-  <h1 class="titulus rise">NMO &middot; SOC</h1>
+      <p class="fasti-primary" lang="la"><span id="roman-date">&mdash;</span><span class="sep">&middot;</span>Anno ab Urbe Condita <span id="auc-year">&mdash;</span></p>
 
-  <div class="hedera rise" aria-hidden="true">
-    <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 4C12.5 9.5 5 10.5 5 15.5c0 3.9 3.9 5 5.9 3-1 3 .9 5.1 5.1 8.1 4.2-3 6.1-5.1 5.1-8.1 2 2 5.9.9 5.9-3C27 10.5 19.5 9.5 16 4z"/></svg>
-  </div>
+      <p class="fasti-secondary"><span lang="la" title="The sun's place in the zodiac, reckoned as Pliny and Columella reckoned it, with the equinox falling in the eighth degree of Aries.">Sol <span id="sol-signum">&mdash;</span></span><span class="sep">&middot;</span><span lang="la" id="latin-weekday">&mdash;</span><span class="sep">&middot;</span><time id="civil-date"></time></p>
 
-  <p class="thesis rise rise-2">Guides, tools and resources for English.</p>
-  <p class="lede rise rise-2">Built for my classes, and free for anyone else who finds them useful.</p>
+      <dl class="computus">
+        <div>
+          <dt title="Golden Number: the year's place in the 19-year lunar cycle.">Aureus Numerus</dt>
+          <dd id="c-aureus">&mdash;</dd>
+        </div>
+        <div>
+          <dt title="Epact: the age of the moon on 1 January. Thirty is written as an asterisk.">Epacta</dt>
+          <dd id="c-epacta">&mdash;</dd>
+        </div>
+        <div>
+          <dt title="Roman Indiction: a 15-year civil cycle used for dating documents.">Indictio Romana</dt>
+          <dd id="c-indictio">&mdash;</dd>
+        </div>
+        <div>
+          <dt title="Solar Cycle: the 28-year period after which the weekdays fall on the same dates.">Cyclus Solaris</dt>
+          <dd id="c-cyclus">&mdash;</dd>
+        </div>
+      </dl>
+    </section>
 
-  <div class="panels rise rise-3">
+    <div class="rise rise-3">
+      <p class="thesis">Guides, tools and resources for English.</p>
+      <p class="lede">Built for my classes, and free for anyone else who finds them useful.</p>
+    </div>
 
-    <!-- ===== To add a panel, copy one block from here ===== -->
-    <a class="panel" href="/VCE-English-Guide/">
-      <span class="panel-name">VCE English Guide</span>
-      <span class="panel-note">Structures, sample paragraphs and metalanguage for text response, comparative and analysing argument.</span>
-      <span class="panel-tag">Units III&ndash;IV</span>
-    </a>
-    <!-- ===== to here, and change the href, name, note and tag ===== -->
+  </header>
 
-    <a class="panel" href="/exam-timer/">
-      <span class="panel-name">Assessment Timer</span>
-      <span class="panel-note">Reading and writing time on one locked screen, with the start and finish clocks showing.</span>
-      <span class="panel-tag">Exam room</span>
-    </a>
+  <main>
 
-    <a class="panel" href="/Developmental-Rubric-Creator/">
-      <span class="panel-name">Developmental Rubric Builder</span>
-      <span class="panel-note">Choose the curriculum descriptions a task actually assesses, draft the five levels, and export a rubric Compass will import.</span>
-      <span class="panel-tag">Years VII&ndash;X</span>
-    </a>
+    <section class="shelf">
+      <h2 class="margin-note">Guides</h2>
 
-    <a class="panel" href="/VCE-English-Guide/marker.html">
-      <span class="panel-name">Essay Marker</span>
-      <span class="panel-note">Type an essay in, or photograph handwritten work, and have it marked against the official criteria and expected qualities.</span>
-      <span class="panel-tag">Sections A &middot; B &middot; C</span>
-    </a>
+      <!-- ===== To add an entry, copy one block from here ===== -->
+      <a class="entry" href="/VCE-English-Guide/">
+        <span class="entry-name">VCE English Guide</span>
+        <span class="entry-arrow" aria-hidden="true">&rarr;</span>
+        <span class="entry-note">Structures, sample paragraphs and metalanguage for text response, comparative and analysing argument.</span>
+        <span class="entry-tag">Units 1&ndash;4</span>
+      </a>
+      <!-- ===== to here, and change the href, name, note and tag ===== -->
 
-  </div>
+    </section>
+
+    <section class="shelf">
+      <h2 class="margin-note">Tools</h2>
+
+      <a class="entry" href="https://nmo-soc.github.io/exam-timer/">
+        <span class="entry-name">Assessment Timer</span>
+        <span class="entry-arrow" aria-hidden="true">&rarr;</span>
+        <span class="entry-note">Reading and writing time on one locked screen, with the start and finish clocks showing. Set it up for a CAT, a SAC or a developmental task, then put it on the board.</span>
+        <span class="entry-tag">Exam room</span>
+      </a>
+
+    </section>
+
+    <!-- ===== A further shelf, ready to use. Delete the comment markers
+             below to switch it on, then fill in your own links. =====
+
+    <section class="shelf">
+      <h2 class="margin-note">Classroom</h2>
+
+      <a class="entry" href="/REPO-NAME/">
+        <span class="entry-name">Name of the thing</span>
+        <span class="entry-arrow" aria-hidden="true">&rarr;</span>
+        <span class="entry-note">One line saying what a student would use it for.</span>
+        <span class="entry-tag">Years 7&ndash;10</span>
+      </a>
+
+    </section>
+
+    ===== -->
+
+  </main>
 
   <details class="ratio-section">
     <summary>Ratio Calculandi</summary>
 
     <p class="ratio-intro" lang="la">Nihil eorum quae supra leguntur manu insertum est: omnia ex hodierno die computantur. Ratio haec est.</p>
-    <p class="ratio-intro" lang="en">Nothing in the banner above is typed in. It is all worked out in the browser from today's date, like so.</p>
+    <p class="ratio-intro" lang="en">Nothing at the top of this page is typed in. It is all worked out in the browser from today's date, like so.</p>
 
     <button class="lang-toggle" id="lang-toggle" type="button">English</button>
 
@@ -441,38 +438,6 @@
         <span class="formula">(locus solis + VII gradus) per XXX: signum et gradus</span></dd>
         <dd lang="en">The sun's position along the ecliptic, then shifted seven degrees: Pliny and Columella both put the equinox in the <em>eighth</em> degree of Aries rather than the first, so the Roman signs begin about a week earlier than the modern ones. The <em>gradus</em> is the degree the sun has reached within the sign.
         <span class="formula">(solar longitude + 7&deg;) &divide; 30 &rarr; sign, remainder &rarr; degree</span></dd>
-      </div>
-
-      <div>
-        <dt>Horae</dt>
-        <dd lang="la">Dies naturalis a solis ortu ad occasum patet, in duodecim horas divisus; nox pariter. Horae igitur aestate longiores sunt, hieme breviores. Dicitur ergo <em>hora prima diei</em> aut <em>hora prima noctis</em>. Ortus occasusque ad Melburnam computantur.
-        <span class="formula">(tempus ab ortu) per XII partes aequas</span></dd>
-        <dd lang="en">The natural day runs from sunrise to sunset and is cut into twelve hours; the night likewise. The hours are therefore long in summer and short in winter &mdash; on a July evening here an hour of the night runs about seventy minutes. Sunrise and sunset are computed for Melbourne.
-        <span class="formula">(time since sunrise) &divide; daylight &times; 12</span></dd>
-      </div>
-
-      <div>
-        <dt>Vigiliae</dt>
-        <dd lang="la">Nox a solis occasu ad ortum in quattuor vigilias aequas dividitur: prima, secunda, tertia, quarta. Sic excubiae agebantur. Interdiu nihil ostenditur.
-        <span class="formula">(tempus ab occasu) per IV partes aequas</span></dd>
-        <dd lang="en">The night, sunset to sunrise, in four equal watches &mdash; how the guard was set, running alongside the twelve hours of the night. Nothing is shown during daylight.
-        <span class="formula">(time since sunset) &divide; night &times; 4</span></dd>
-      </div>
-
-      <div>
-        <dt>Nundinae</dt>
-        <dd lang="la">Mercatus, quem Romani nono quoque die numerabant &mdash; re vera octavo. Litterae A ad H diebus in fastis adscribebantur, a Kalendis Januariis semper ab A incipientes. Quae littera mercatum ipsum ferret, per annos mutabatur.
-        <span class="formula">(dies anni) per VIII: A, B, C ... H</span></dd>
-        <dd lang="en">The market cycle, which the Romans counted inclusively as every ninth day and we would call every eighth. Their calendars lettered the days A to H, beginning again at A on 1 January, which is what this shows. Which letter carried the market varied from year to year and is not recoverable now.
-        <span class="formula">(day of the year) mod 8 &rarr; A, B, C &hellip; H</span></dd>
-      </div>
-
-      <div>
-        <dt>Partes diei</dt>
-        <dd lang="la">Dies civilis a media nocte ad mediam noctem sedecim partes habet, quas veteres nominibus, non numeris, distinxerunt: quattuor diei, duodecim noctis. Quoniam nulla tempora certa traduntur, hic ad solis ortum et occasum mediamque noctem accommodantur.
-        <span class="formula">vespere in VII, matutino in V partes; dies ita ut Meridies medium teneat</span></dd>
-        <dd lang="en">The civil day, midnight to midnight, carries sixteen named divisions &mdash; four across the daylight, twelve across the night. The sources give the names and their order but no clock times, so they are fitted to the sun here: sunset to midnight in sevenths, midnight to sunrise in fifths, and the daylight split so that <em>Meridies</em> straddles solar noon.
-        <span class="formula">Solis occasus &rarr; Vespera &rarr; Crepusculum &rarr; Prima fax &rarr; Concubia nox &rarr; Intempesta nox &rarr; Inclinatio ad mediam noctem &rarr; Media nox &rarr; Mediae noctis inclinatio &rarr; Gallicinium &rarr; Conticinium &rarr; Diluculum &rarr; Mane &rarr; Antemeridianum tempus &rarr; Meridies &rarr; Tempus pomeridianum</span></dd>
       </div>
 
       <div>
@@ -518,14 +483,14 @@
     <p class="ratio-source" lang="en">The calendar follows the tables in the <a href="https://penelope.uchicago.edu/encyclopaedia_romana/calendar/juliancalendar.html">Encyclopaedia Romana</a>; the four cycles follow <a href="https://calculus-temporum-romanorum-a0a9d6.gitlab.io/">Calculus Temporum Romanorum</a>.</p>
   </details>
 
-</main>
+</div>
 
 <script>
 (function () {
   'use strict';
 
   /* ============================================================
-     SETTINGS
+     SETTINGS — the only two lines you are likely to want to change
      ============================================================ */
 
   // Varro's date for the founding of Rome is 753 BC, which makes AD 2026
@@ -536,116 +501,6 @@
   // Set this to true and January to 20 April will count as the previous
   // A.U.C. year; set it to false and the year turns over on 1 January.
   var AUC_FROM_PARILIA = false;
-
-  // Pliny (Natural History II.81) and Columella (De Re Rustica IX.14) put
-  // the equinoxes and solstices in the EIGHTH degree of Aries, Libra,
-  // Capricorn and Cancer, not the first. Their signs therefore begin about
-  // a week earlier than the modern ones. Set to 0 for modern reckoning.
-  var ZODIAC_OFFSET = 7;
-
-  // Sunrise and sunset are needed for the Roman hours. Melbourne.
-  var LATITUDE  = -37.8136;
-  var LONGITUDE = 144.9631;
-
-  // International Atomic Time runs ahead of UTC by the accumulated leap
-  // seconds. IERS Bulletin C 72 (6 July 2026) holds UTC - TAI at -37s and
-  // announces no leap second for December 2026. If a leap second is ever
-  // added, raise this by one. Set it to 0 to show ordinary civil time.
-  var TAI_OFFSET = 37;
-
-  // How often to re-interrogate the server clock, in minutes.
-  var RESYNC_MINUTES = 15;
-
-  /* ============================================================
-     The clock
-
-     The device clock is not trusted. Instead the page asks its own server
-     for the time and works out how far this machine has drifted from it.
-
-     An HTTP Date header is only accurate to the whole second, so a single
-     reading would leave us up to a second out. Each reading does however
-     bound the true offset: the header was generated somewhere between the
-     moment we sent the request and the moment the reply arrived, and the
-     server's true time then lay somewhere inside that whole second. Taking
-     several readings at different points in the second and intersecting
-     those bounds narrows the answer to a fraction of a second.
-
-     If the page is opened straight off the disk, or the network is down,
-     the fetch fails, the offset stays at zero, and the clock falls back to
-     this device while marking itself as unsynchronised.
-     ============================================================ */
-
-  var netOffset = 0;      // milliseconds to add to Date.now() for true UTC
-  var synced = false;
-  var syncNote = 'not yet synchronised';
-
-  function trueNow() { return Date.now() + netOffset; }
-
-  // One reading. The Date header names a whole second, so the true offset
-  // lies between (stamp - received) and (stamp + 1000 - sent).
-  function probe(method, done) {
-    var sent = Date.now();
-    fetch(location.pathname + '?_=' + sent + '.' + Math.random(),
-          { method: method, cache: 'no-store' })
-      .then(function (res) {
-        var received = Date.now(),
-            header = res.headers.get('Date'),
-            age = parseInt(res.headers.get('Age') || '0', 10),
-            stamp = header ? Date.parse(header) : NaN;
-        if (isNaN(stamp)) { done(null); return; }
-        if (age > 0) stamp += age * 1000;     // it came from a cache
-        done({ lo: stamp - received, hi: stamp + 1000 - sent });
-      })
-      .catch(function () { done(null); });
-  }
-
-  function runProbes(method, finish) {
-    var samples = [], n = 0, PROBES = 6;
-    (function next() {
-      probe(method, function (sample) {
-        if (sample) samples.push(sample);
-        n++;
-        if (n < PROBES) setTimeout(next, 120);
-        else finish(samples);
-      });
-    })();
-  }
-
-  // Intersect the brackets if they agree. If they do not - a cache or a
-  // stray delay can throw one out - fall back to the median estimate
-  // rather than abandoning the sync altogether.
-  function applySamples(samples) {
-    var lo = -Infinity, hi = Infinity, mids = [], i;
-
-    for (i = 0; i < samples.length; i++) {
-      lo = Math.max(lo, samples[i].lo);
-      hi = Math.min(hi, samples[i].hi);
-      mids.push((samples[i].lo + samples[i].hi) / 2);
-    }
-
-    if (lo <= hi) {
-      netOffset = Math.round((lo + hi) / 2);
-      syncNote = 'server clock, to within about ' + Math.round((hi - lo) / 2) + ' ms';
-    } else {
-      mids.sort(function (a, b) { return a - b; });
-      netOffset = Math.round(mids[Math.floor(mids.length / 2)]);
-      syncNote = 'server clock, approximate';
-    }
-    synced = true;
-  }
-
-  function syncClock() {
-    if (!window.fetch) { syncNote = 'this browser cannot ask the server'; return; }
-
-    runProbes('HEAD', function (samples) {
-      if (samples.length) { applySamples(samples); return; }
-      // some caches and proxies mishandle HEAD, so try a plain request
-      runProbes('GET', function (more) {
-        if (more.length) applySamples(more);
-        else syncNote = 'could not reach the server clock';
-      });
-    });
-  }
 
   /* ============================================================
      The Roman calendar, after the tables at
@@ -669,10 +524,6 @@
 
   var WEEKDAYS = ['Dies Solis', 'Dies Lunae', 'Dies Martis', 'Dies Mercurii',
                   'Dies Jovis', 'Dies Veneris', 'Dies Saturni'];
-
-  var SIGNS = ['in Ariete', 'in Tauro', 'in Geminis', 'in Cancro',
-               'in Leone', 'in Virgine', 'in Libra', 'in Scorpione',
-               'in Sagittario', 'in Capricorno', 'in Aquario', 'in Piscibus'];
 
   function isLeap(y) {
     return (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0;
@@ -716,6 +567,23 @@
     return 'a.d. ' + roman(len - d + 2) + ' Kal. ' + next.ab;
   }
 
+  /* ============================================================
+     The zodiac
+
+     Pliny (Natural History II.81) and Columella (De Re Rustica IX.14)
+     both put the equinoxes and solstices in the EIGHTH degree of Aries,
+     Libra, Capricorn and Cancer, rather than the first. Columella says
+     so expressly, and rejects Hipparchus for holding otherwise. Their
+     signs therefore begin about a week earlier in the calendar than the
+     modern tropical ones. Set the offset below to 0 for modern reckoning.
+     ============================================================ */
+
+  var ZODIAC_OFFSET = 7;
+
+  var SIGNS = ['in Ariete', 'in Tauro', 'in Geminis', 'in Cancro',
+               'in Leone', 'in Virgine', 'in Libra', 'in Scorpione',
+               'in Sagittario', 'in Capricorno', 'in Aquario', 'in Piscibus'];
+
   // The sun's apparent ecliptic longitude, by the low-precision method of
   // the Astronomical Almanac. Good to about a hundredth of a degree.
   function solarLongitude(date) {
@@ -731,133 +599,6 @@
     var lam = (solarLongitude(date) + ZODIAC_OFFSET) % 360,
         degree = Math.floor(lam % 30) + 1;
     return SIGNS[Math.floor(lam / 30)] + ', gradu ' + roman(degree);
-  }
-
-  /* ============================================================
-     The hours of the natural day, and the divisions of the civil day
-
-     The natural day (dies naturalis) runs sunrise to sunset and is cut
-     into twelve hours; the night likewise. The hours are therefore long
-     in summer and short in winter.
-
-     The civil day (dies civilis) runs midnight to midnight and carries
-     sixteen named divisions. The sources give their names and their order
-     but no clock times, so they are fitted here to the sun: four across
-     the daylight, seven from sunset to midnight, five from midnight to
-     sunrise.
-     ============================================================ */
-
-  var ORDINALS = ['prima','secunda','tertia','quarta','quinta','sexta',
-                  'septima','octava','nona','decima','undecima','duodecima'];
-
-  // sunset -> midnight
-  var VESPERTINA = ['Solis occasus', 'Vespera', 'Crepusculum', 'Prima fax',
-                    'Concubia nox', 'Intempesta nox', 'Inclinatio ad mediam noctem'];
-
-  // midnight -> sunrise
-  var MATUTINA = ['Media nox', 'Mediae noctis inclinatio', 'Gallicinium',
-                  'Conticinium', 'Diluculum'];
-
-  // the four watches into which the night was divided for the guard
-  var VIGILIAE = ['Prima vigilia', 'Secunda vigilia',
-                  'Tertia vigilia', 'Quarta vigilia'];
-
-  // The nundinal cycle: eight days lettered A to H, restarting at A on
-  // 1 January as the letters stood in the Roman fasti. Which letter
-  // carried the market itself shifted from year to year.
-  var NUNDINAL = 'ABCDEFGH';
-
-  function nundinalLetter(d) {
-    var days = Math.round((Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())
-                         - Date.UTC(d.getFullYear(), 0, 1)) / 86400000);
-    return NUNDINAL.charAt(days % 8);
-  }
-
-  var sunCache = {};
-
-  // Sunrise and sunset by the standard sunrise equation.
-  function sunTimes(date) {
-    var key = date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate();
-    if (sunCache[key] !== undefined) return sunCache[key];
-
-    var RAD = Math.PI / 180, DEG = 180 / Math.PI,
-        noon = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12),
-        jd = noon.getTime() / 86400000 + 2440587.5,
-        n = Math.round(jd - 2451545.0 + 0.0008),
-        Js = n - LONGITUDE / 360,
-        M = (357.5291 + 0.98560028 * Js) % 360,
-        C = 1.9148 * Math.sin(M * RAD) + 0.0200 * Math.sin(2 * M * RAD)
-            + 0.0003 * Math.sin(3 * M * RAD),
-        lam = (M + C + 180 + 102.9372) % 360,
-        Jt = 2451545.0 + Js + 0.0053 * Math.sin(M * RAD) - 0.0069 * Math.sin(2 * lam * RAD),
-        sinDec = Math.sin(lam * RAD) * Math.sin(23.4397 * RAD),
-        dec = Math.asin(sinDec),
-        cosW = (Math.sin(-0.833 * RAD) - Math.sin(LATITUDE * RAD) * sinDec)
-               / (Math.cos(LATITUDE * RAD) * Math.cos(dec)),
-        w, out;
-
-    if (cosW > 1 || cosW < -1) {      // the sun neither rises nor sets
-      out = null;
-    } else {
-      w = Math.acos(cosW) * DEG;
-      out = {
-        rise: new Date((Jt - w / 360 - 2440587.5) * 86400000),
-        set:  new Date((Jt + w / 360 - 2440587.5) * 86400000)
-      };
-    }
-    sunCache[key] = out;
-    return out;
-  }
-
-  function midnightOf(d, offset) {
-    return new Date(d.getFullYear(), d.getMonth(), d.getDate() + (offset || 0));
-  }
-
-  function slot(list, t, from, to) {
-    var i = Math.floor((t - from) / (to - from) * list.length);
-    return list[Math.max(0, Math.min(list.length - 1, i))];
-  }
-
-  function horae(now) {
-    var today = sunTimes(now), t, f, prevSet, nextRise, mid, other;
-    if (!today) return null;
-    t = now.getTime();
-
-    // daylight: sunrise to sunset
-    if (t >= today.rise.getTime() && t < today.set.getTime()) {
-      f = (t - today.rise) / (today.set - today.rise);
-      return {
-        hora: 'Hora ' + ORDINALS[Math.min(11, Math.floor(f * 12))] + ' diei',
-        vigilia: null,                       // the watches belong to the night
-        pars: f < 0.25 ? 'Mane'
-            : f < 0.45 ? 'Antemeridianum tempus'
-            : f < 0.55 ? 'Meridies'
-            : 'Tempus pomeridianum'
-      };
-    }
-
-    // night: the previous sunset to the next sunrise
-    if (t < today.rise.getTime()) {
-      other = sunTimes(midnightOf(now, -1));
-      prevSet = other && other.set;
-      nextRise = today.rise;
-      mid = midnightOf(now, 0);
-    } else {
-      other = sunTimes(midnightOf(now, 1));
-      prevSet = today.set;
-      nextRise = other && other.rise;
-      mid = midnightOf(now, 1);
-    }
-    if (!prevSet || !nextRise) return null;
-
-    f = (t - prevSet) / (nextRise - prevSet);
-    return {
-      hora: 'Hora ' + ORDINALS[Math.min(11, Math.floor(f * 12))] + ' noctis',
-      vigilia: VIGILIAE[Math.min(3, Math.floor(f * 4))],
-      pars: t < mid.getTime()
-            ? slot(VESPERTINA, t, prevSet.getTime(), mid.getTime())
-            : slot(MATUTINA, t, mid.getTime(), nextRise.getTime())
-    };
   }
 
   /* ============================================================
@@ -885,9 +626,11 @@
      Render
      ============================================================ */
 
+  var CIVIL_MONTHS = ['January','February','March','April','May','June','July',
+                      'August','September','October','November','December'];
   var lastRendered = null;
 
-  // Paint any run of Roman numerals in the accent colour.
+  // Paint any run of Roman numerals in minium.
   function rubricate(s) {
     return s.replace(/\b([IVXLCDM]+)\b/g, '<span class="num">$1</span>');
   }
@@ -897,20 +640,13 @@
     if (el) el.innerHTML = rubricate(text);
   }
 
-  // C and D are Roman numerals as well as nundinal letters, so this one
-  // goes in as plain text and escapes the rubricator.
-  function setText(id, text) {
-    var el = document.getElementById(id);
-    if (el) el.textContent = text;
-  }
-
   function render() {
-    var now = new Date(trueNow()),
+    var now = new Date(),
         y = now.getFullYear(),
         m = now.getMonth() + 1,
         d = now.getDate(),
         stamp = y + '-' + m + '-' + d,
-        aucYear, e;
+        aucYear, e, civil;
 
     if (stamp === lastRendered) return;
     lastRendered = stamp;
@@ -924,78 +660,22 @@
     set('auc-year', roman(aucYear));
     set('sol-signum', signum(now));
     set('latin-weekday', WEEKDAYS[now.getDay()]);
-    setText('c-nundinae', nundinalLetter(now));
     set('c-aureus', roman(goldenNumber(y)));
     set('c-epacta', e === 0 ? '*' : roman(e));
     set('c-indictio', roman(indiction(y)));
     set('c-cyclus', roman(solarCycle(y)));
+
+    civil = document.getElementById('civil-date');
+    if (civil) {
+      civil.textContent = d + ' ' + CIVIL_MONTHS[m - 1] + ' ' + y;
+      civil.setAttribute('datetime', y + '-' +
+        ('0' + m).slice(-2) + '-' + ('0' + d).slice(-2));
+    }
   }
 
-  function pad(n) { return (n < 10 ? '0' : '') + n; }
-  function pad3(n) { return (n < 10 ? '00' : n < 100 ? '0' : '') + n; }
-
-  var elClock, elHms, elMs, elVigilia;
-  var lastHms = '', lastPars = '', lastHora = '', lastVigilia = '';
-
-  function tick() {
-    var stamp = trueNow(),
-        now = new Date(stamp),
-        atomic = new Date(stamp + TAI_OFFSET * 1000),
-        hms, h;
-
-    if (elMs) elMs.textContent = '.' + pad3(atomic.getMilliseconds());
-
-    hms = pad(atomic.getHours()) + ':' + pad(atomic.getMinutes())
-        + ':' + pad(atomic.getSeconds());
-    if (elHms && hms !== lastHms) {
-      elHms.textContent = hms;
-      lastHms = hms;
-    }
-
-    if (elClock) {
-      elClock.className = synced ? '' : 'unsynced';
-      elClock.title = synced
-        ? 'International Atomic Time, 37 seconds ahead of UTC, shown at the '
-          + 'local offset. Taken from the ' + syncNote + '.'
-        : 'Showing the time kept by this device: ' + syncNote + '.';
-    }
-
-    h = horae(now);
-    if (h && h.hora !== lastHora) { set('hora', h.hora); lastHora = h.hora; }
-    if (h && h.pars !== lastPars) { set('pars-diei', h.pars); lastPars = h.pars; }
-
-    if (elVigilia) {
-      if (h && h.vigilia) {
-        elVigilia.style.display = '';
-        if (h.vigilia !== lastVigilia) { set('vigilia', h.vigilia); lastVigilia = h.vigilia; }
-      } else {
-        elVigilia.style.display = 'none';
-        lastVigilia = '';
-      }
-    }
-
-    render();   // returns immediately unless the date has turned over
-  }
-
-  syncClock();
-  setInterval(syncClock, RESYNC_MINUTES * 60000);
-
-  // A sleeping laptop drifts, so check again whenever the tab comes back.
-  document.addEventListener('visibilitychange', function () {
-    if (!document.hidden) syncClock();
-  });
-
-  elClock = document.getElementById('clock');
-  elHms = document.getElementById('clock-hms');
-  elMs = document.getElementById('clock-ms');
-  elVigilia = document.getElementById('vigilia');
-
-  tick();
-  if (window.requestAnimationFrame) {
-    (function frame() { tick(); requestAnimationFrame(frame); })();
-  } else {
-    setInterval(tick, 60);
-  }
+  render();
+  // Keep the dateline honest if the page is left open past midnight.
+  setInterval(render, 60000);
 
   // Latin or English for the notes at the foot of the page.
   var toggle = document.getElementById('lang-toggle');
