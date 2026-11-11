@@ -85,9 +85,8 @@
 
   .banner .lbl{
     font-family:var(--display);
-    font-size:.62rem;
-    letter-spacing:.15em;
-    text-transform:uppercase;
+    font-size:.75rem;
+    letter-spacing:.05em;
     color:var(--plaster-dim);
     padding-right:.25em;
   }
@@ -100,7 +99,7 @@
     margin-bottom:.35rem;
     border-bottom:1px solid rgba(239,203,132,.28);
   }
-  .banner-day{font-size:.74rem}
+  .banner-day{font-size:.75rem;row-gap:.4rem}
 
   #clock.unsynced{opacity:.7;text-decoration:underline dotted}
   #clock-ms{opacity:.62;font-size:.86em}
@@ -219,15 +218,16 @@
 
   .panel-tag{
     font-family:var(--display);
-    font-size:.6rem;
-    letter-spacing:.2em;
-    text-transform:uppercase;
+    font-family:var(--text);
+    font-style:italic;
+    font-size:.85rem;
+    letter-spacing:.02em;
     color:var(--ochre);
   }
 
-  .panel:hover,
-  .panel:focus-visible{background:var(--pompeian-lit);outline-color:var(--ochre)}
-  .panel:focus-visible{outline-width:2px}
+  /* hover darkens the tile so the plaster text keeps 5:1+ contrast */
+  .panel:hover{background:#7A2A1D;outline-color:var(--ochre)}
+  .panel:focus-visible{background:#7A2A1D;outline:2px solid var(--ink)}
 
   /* ================= ratio calculandi ================= */
   .ratio-section{
@@ -242,13 +242,16 @@
     cursor:pointer;
     text-align:center;
     font-family:var(--display);
-    font-size:.64rem;
+    font-size:.75rem;
     letter-spacing:.2em;
     text-transform:uppercase;
     color:var(--ink-soft);
+    padding:.6rem 0;
     transition:color .3s;
   }
   .ratio-section > summary::-webkit-details-marker{display:none}
+  .ratio-section > summary h2{font:inherit;margin:0;letter-spacing:inherit;text-transform:inherit}
+  .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
   .ratio-section > summary::after{content:"  +";color:var(--pompeian)}
   .ratio-section[open] > summary::after{content:"  \2013"}
   .ratio-section > summary:hover,
@@ -267,14 +270,13 @@
   .lang-toggle{
     display:block;
     margin:0 auto 2.25rem;
-    padding:0 0 .2rem;
+    padding:.6rem .75rem .5rem;
     border:0;
     border-bottom:1px solid var(--plaster-dim);
     background:none;
     font-family:var(--display);
-    font-size:.6rem;
-    letter-spacing:.18em;
-    text-transform:uppercase;
+    font-size:.75rem;
+    letter-spacing:.05em;
     color:var(--ink-soft);
     cursor:pointer;
     transition:color .3s,border-color .3s;
@@ -291,9 +293,8 @@
   }
   .ratio dt{
     font-family:var(--display);
-    font-size:.62rem;
-    letter-spacing:.17em;
-    text-transform:uppercase;
+    font-size:.8rem;
+    letter-spacing:.03em;
     color:var(--pompeian);
     margin:0 0 .4rem;
   }
@@ -349,14 +350,14 @@
 <body>
 
 <header class="banner">
-  <div class="banner-inner banner-now" aria-label="The time now, in Roman hours">
+  <div class="banner-inner banner-now" role="group" aria-label="The time now, in Roman hours">
     <span title="International Atomic Time, 37 seconds ahead of UTC, shown at the local offset."><span class="lbl">TAI</span><time id="clock"><span id="clock-hms">--:--:--</span><span id="clock-ms">.---</span></time></span>
     <span lang="la" id="hora" title="The hour of the natural day: sunrise to sunset divided into twelve, and the night likewise.">&mdash;</span>
     <span lang="la" id="vigilia" title="The watch of the night: sunset to sunrise divided into four. Shown only after dark.">&mdash;</span>
     <span lang="la" id="pars-diei" title="The division of the civil day, midnight to midnight, by its old Latin name.">&mdash;</span>
   </div>
 
-  <div class="banner-inner banner-day" aria-label="Today's date in the Roman calendar">
+  <div class="banner-inner banner-day" role="group" aria-label="Today's date in the Roman calendar">
     <span lang="la" id="roman-date">&mdash;</span>
     <span lang="la"><span id="auc-year">&mdash;</span> A.U.C.</span>
     <span lang="la" title="The sun's place in the zodiac, reckoned as Pliny and Columella reckoned it, with the equinox falling in the eighth degree of Aries.">Sol <span id="sol-signum">&mdash;</span></span>
@@ -377,60 +378,61 @@
     <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 4C12.5 9.5 5 10.5 5 15.5c0 3.9 3.9 5 5.9 3-1 3 .9 5.1 5.1 8.1 4.2-3 6.1-5.1 5.1-8.1 2 2 5.9.9 5.9-3C27 10.5 19.5 9.5 16 4z"/></svg>
   </div>
 
-  <p class="thesis rise rise-2">Guides, tools and resources for English.</p>
+  <p class="thesis rise rise-2">Guides, tools and resources for English and Humanities.</p>
   <p class="lede rise rise-2">Built for my classes, and free for anyone else who finds them useful.</p>
 
+  <h2 class="sr-only">Tools</h2>
   <div class="panels rise rise-3">
 
     <!-- ===== To add a panel, copy one block from here ===== -->
-    <a class="panel" href="https://nmo-soc.github.io/ars-verbi/">
+    <a class="panel" href="https://nmo-soc.github.io/ars-verbi/" aria-label="VCE English Guide" aria-describedby="pn1 pt1">
       <span class="panel-name">VCE English Guide</span>
-      <span class="panel-note">Structures, sample paragraphs and metalanguage for text response, comparative and analysing argument.</span>
-      <span class="panel-tag">Units III&ndash;IV</span>
+      <span class="panel-note" id="pn1">Structures, sample paragraphs and metalanguage for text response, comparative and analysing argument.</span>
+      <span class="panel-tag" id="pt1">Units III&ndash;IV</span>
     </a>
     <!-- ===== to here, and change the href, name, note and tag ===== -->
 
-    <a class="panel" href="/exam-timer/">
+    <a class="panel" href="/exam-timer/" aria-label="Assessment Timer" aria-describedby="pn2 pt2">
       <span class="panel-name">Assessment Timer</span>
-      <span class="panel-note">Reading and writing time on one locked screen, with the start and finish clocks showing.</span>
-      <span class="panel-tag">Exam room</span>
+      <span class="panel-note" id="pn2">Reading and writing time on one locked screen, with the start and finish clocks showing.</span>
+      <span class="panel-tag" id="pt2">Exam room</span>
     </a>
 
-    <a class="panel" href="/Developmental-Rubric-Creator/">
+    <a class="panel" href="/Developmental-Rubric-Creator/" aria-label="Developmental Rubric Builder" aria-describedby="pn3 pt3">
       <span class="panel-name">Developmental Rubric Builder</span>
-      <span class="panel-note">Choose the curriculum descriptions a task actually assesses, draft the five levels, and export a rubric Compass will import.</span>
-      <span class="panel-tag">Years VII&ndash;X</span>
+      <span class="panel-note" id="pn3">Choose the curriculum descriptions a task actually assesses, draft the five levels, and export a rubric Compass will import.</span>
+      <span class="panel-tag" id="pt3">Years VII&ndash;X</span>
     </a>
 
-    <a class="panel" href="/VCE-English-Guide/marker.html">
+    <a class="panel" href="/VCE-English-Guide/marker.html" aria-label="Essay Marker" aria-describedby="pn4 pt4">
       <span class="panel-name">Essay Marker</span>
-      <span class="panel-note">Type an essay in, or photograph handwritten work, and have it marked against the official criteria and expected qualities.</span>
-      <span class="panel-tag">Sections A &middot; B &middot; C</span>
+      <span class="panel-note" id="pn4">Type an essay in, or photograph handwritten work, and have it marked against the official criteria and expected qualities.</span>
+      <span class="panel-tag" id="pt4">Sections A &middot; B &middot; C</span>
     </a>
-    <a class="panel" href="/VCE-English-Guide/ask-max.html">
+    <a class="panel" href="/VCE-English-Guide/ask-max.html" aria-label="Ask Max" aria-describedby="pn5 pt5">
       <span class="panel-name">Ask Max</span>
-      <span class="panel-note">An AI chat-bot made to answer questions regarding Units 3/4 English and the end of year exam.</span>
-      <span class="panel-tag">Study tool</span>
+      <span class="panel-note" id="pn5">An AI chat-bot made to answer questions regarding Units 3/4 English and the end of year exam.</span>
+      <span class="panel-tag" id="pt5">Study tool</span>
     </a>
-    <a class="panel" href="/neptune-ocean/">
+    <a class="panel" href="/neptune-ocean/" aria-label="Speak the Speech" aria-describedby="pn6 pt6">
       <span class="panel-name">Speak the Speech</span>
-      <span class="panel-note">An introduction to Shakespearean English: the grammar, a phrase book, a dictionary of common and rare words, and exercises.</span>
-      <span class="panel-tag">Shakespeare</span>
+      <span class="panel-note" id="pn6">An introduction to Shakespearean English: the grammar, a phrase book, a dictionary of common and rare words, and exercises.</span>
+      <span class="panel-tag" id="pt6">Shakespeare</span>
     </a>
-    <a class="panel" href="/grammarlab/">
+    <a class="panel" href="/grammarlab/" aria-label="GrammarLab" aria-describedby="pn7 pt7">
       <span class="panel-name">GrammarLab</span>
-      <span class="panel-note">A graded course in grammar and composition, from the sentence through to style, with a generator for printable worksheets and answer keys.</span>
-      <span class="panel-tag">Lessons I&ndash;LXXV</span>
+      <span class="panel-note" id="pn7">A graded course in grammar and composition, from the sentence through to style, with a generator for printable worksheets and answer keys.</span>
+      <span class="panel-tag" id="pt7">Lessons I&ndash;LXXV</span>
     </a>
-    <a class="panel" href="https://github.com/NMO-SOC/Defunct-VCE-English-Guide-MMXXVI">
+    <a class="panel" href="https://github.com/NMO-SOC/Defunct-VCE-English-Guide-MMXXVI" aria-label="VCE English Guide (Defunct)" aria-describedby="pn8 pt8">
       <span class="panel-name">VCE English Guide (Defunct)</span>
-      <span class="panel-note">The previous edition of the VCE English Guide, kept for reference. It has been superseded by the current guide above.</span>
-      <span class="panel-tag">Archived</span>
+      <span class="panel-note" id="pn8">The previous edition of the VCE English Guide, kept for reference. It has been superseded by the current guide above.</span>
+      <span class="panel-tag" id="pt8">Archived</span>
     </a>
   </div>
 
   <details class="ratio-section">
-    <summary>Ratio Calculandi</summary>
+    <summary><h2>Ratio Calculandi</h2></summary>
 
     <p class="ratio-intro" lang="la">Nihil eorum quae supra leguntur manu insertum est: omnia ex hodierno die computantur. Ratio haec est.</p>
     <p class="ratio-intro" lang="en">Nothing in the banner above is typed in. It is all worked out in the browser from today's date, like so.</p>
