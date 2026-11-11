@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Flashcards</title>
+<style>
+body{font:16px system-ui,sans-serif;max-width:680px;margin:0 auto;padding:16px;background:#eef3f8;color:#222}
+h1{color:#1a4f8b}
+button,select,textarea,input{font:inherit;padding:8px 12px;margin:4px 0;border:1px solid #bbb;border-radius:6px;background:#fff}
+button{cursor:pointer;background:#2b6cb0;color:#fff;border:0}
+nav button{background:#fff;color:#2b6cb0;border:1px solid #2b6cb0}
+nav button.on{background:#2b6cb0;color:#fff}
+#card{height:220px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:1.5rem;background:#fff;border-radius:12px;box-shadow:0 2px 8px #0002;padding:16px;cursor:pointer;margin:12px 0}
+textarea{width:100%;box-sizing:border-box;height:120px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+#grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:12px 0}
+#grid button{background:#fff;color:#222;border:1px solid #bbb;min-height:64px}
+#grid button.sel{background:#fde68a}#grid button.done{visibility:hidden}
+.q{font-size:1.5rem;margin:12px 0}
+</style></head><body>
+<h1>Flashcards</h1>
+<div class="row"><select id="sel"></select><button id="shuf">Shuffle</button></div>
+<nav class="row" id="nav">
+  <button data-m="cards" class="on">Flashcards</button><button data-m="memo">Memorize</button>
+  <button data-m="test">Test</button><button data-m="match">Match</button>
+</nav>
+<div id="cards">
+  <div id="card" tabindex="0"></div>
+  <div class="row"><button id="prev">&larr; Prev</button><span id="pos"></span><button id="next">Next &rarr;</button></div>
+</div>
+<div id="quiz" hidden>
+  <div class="q" id="q"></div>
+  <form id="f"><input id="ans" autocomplete="off" style="width:65%"><button>Check</button></form>
+  <p id="fb"></p><p id="score"></p>
+</div>
+<div id="match" hidden><div id="mstat"></div><div id="grid"></div></div>
+<details><summary>Add a set (one per line: term, definition – tab or comma)</summary>
+<input id="name" placeholder="Set name"><textarea id="paste"></textarea><button id="add">Save (this browser only)</button></details>
+<script>
+let sets={},cards=[],i=0,flipped=false,mode="cards",right=0,queue=[],streak={},pick=null,t0=0;
+const $=id=>document.getElementById(id),shuf=a=>a.sort(()=>Math.random()-.5);
+const mine=()=>{try{return JSON.parse(localStorage.mySets||"{}")}catch{return{}}};
+const esc=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+async function init(){
+  try{sets=await (await fetch("sets.json")).json()}catch{sets={}}
+  Object.assign(sets,mine());
+  $("sel").innerHTML=Object.keys(sets).map(k=>`<option>${esc(k)}</option>`).join("");
+  start();
+}
+function start(){
+  cards=[...(sets[$("sel").value]||[])];i=0;right=0;pick=null;
+  $("cards").hidden=mode!="cards";$("quiz").hidden=!(mode=="test"||mode=="memo");$("match").hidden=mode!="match";
+  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.m==mode));
+  if(mode=="memo"){queue=cards.map((_,k)=>k);streak={};shuf(queue)}
+  if(mode=="test")queue=shuf(cards.map((_,k)=>k));
+  if(mode=="match")return matchStart();
+  show();
+}
+function show(){
+  flipped=false;$("fb").textContent="";$("ans").value="";
+  if(mode=="cards"){const c=cards[i];$("card").textContent=c?c[0]:"No cards";$("pos").textContent=c?`${i+1} / ${cards.length}`:"";return}
+  if(!queue.length){$("q").textContent=mode=="test"?`Done! Score: ${right} / ${cards.length}`:"All memorized!";$("f").hidden=true;return}
+  $("f").hidden=false;$("q").textContent=cards[queue[0]][0];$("ans").focus();
+  $("score").textContent=mode=="test"?`Score: ${right} / ${cards.length}`:`Remaining: ${queue.length}`;
+}
+$("sel").onchange=start;
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{mode=b.dataset.m;start()});
+$("card").onclick=()=>{flipped=!flipped;$("card").textContent=cards[i]?.[flipped?1:0]};
+$("prev").onclick=()=>{i=(i+cards.length-1)%cards.length;show()};
+$("next").onclick=()=>{i=(i+1)%cards.length;show()};
+$("shuf").onclick=()=>{shuf(cards);i=0;if(mode=="match")matchStart();else show()};
+$("f").onsubmit=e=>{e.preventDefault();if(!queue.length)return;
+  const k=queue[0],c=cards[k],ok=$("ans").value.trim().toLowerCase()==c[1].trim().toLowerCase();
+  $("fb").textContent=ok?"Correct!":"Answer: "+c[1];queue.shift();
+  if(mode=="test"){if(ok)right++}
+  else if(ok){streak[k]=(streak[k]||0)+1;if(streak[k]<2)queue.splice(Math.min(3,queue.length),0,k)} // memorize: need 2 right in a row
+  else{streak[k]=0;queue.splice(Math.min(3,queue.length),0,k)}
+  setTimeout(show,ok?500:1800)};
+function matchStart(){
+  const s=shuf(cards.slice(0,8)),tiles=[];
+  s.forEach((c,k)=>tiles.push({k,t:c[0]},{k,t:c[1]}));shuf(tiles);
+  $("grid").innerHTML=tiles.map((x,n)=>`<button data-k="${x.k}" data-n="${n}">${esc(x.t)}</button>`).join("");
+  t0=Date.now();$("mstat").textContent="Match each term with its definition.";
+  $("grid").onclick=e=>{const b=e.target.closest("button");if(!b||b.classList.contains("done")||b===pick)return;
+    if(!pick){pick=b;b.classList.add("sel");return}
+    if(pick.dataset.k==b.dataset.k){pick.classList.add("done");b.classList.add("done")}
+    pick.classList.remove("sel");pick=null;
+    if(!$("grid").querySelector("button:not(.done)"))$("mstat").textContent=`Done in ${((Date.now()-t0)/1000).toFixed(1)}s!`};
+}
+$("add").onclick=()=>{
+  const rows=$("paste").value.split("\n").map(l=>l.split(/\t|,/)).filter(r=>r.length>1).map(r=>[r[0].trim(),r.slice(1).join(",").trim()]);
+  if(!$("name").value||!rows.length)return alert("Need a name and at least one line");
+  const m=mine();m[$("name").value]=rows;localStorage.mySets=JSON.stringify(m);init()};
+init();
+</script></body></html>
