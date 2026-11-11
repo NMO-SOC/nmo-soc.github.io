@@ -1,3 +1,26 @@
 {
-  "Sample set": [["Capital of France", "Paris"], ["2 + 2", "4"], ["Chemical symbol for water", "H2O"]]
+  "Literary devices": [
+    ["Metaphor", "direct comparison"],
+    ["Simile", "comparison using like or as"],
+    ["Personification", "giving human qualities to a non-human thing"],
+    ["Hyperbole", "deliberate exaggeration"],
+    ["Alliteration", "repeated initial consonant sounds"],
+    ["Assonance", "repeated vowel sounds"],
+    ["Onomatopoeia", "a word that imitates a sound"],
+    ["Oxymoron", "two contradictory terms together"],
+    ["Imagery", "language that appeals to the senses"],
+    ["Motif", "a recurring image, idea or symbol"]
+  ],
+  "Grammar terms": [
+    ["Noun", "naming word"],
+    ["Verb", "doing or being word"],
+    ["Adjective", "describes a noun"],
+    ["Adverb", "describes a verb, adjective or adverb"],
+    ["Conjunction", "joins words or clauses"],
+    ["Subject", "who or what the sentence is about"],
+    ["Predicate", "what is said about the subject"],
+    ["Clause", "group of words containing a verb"],
+    ["Subordinate clause", "cannot stand alone as a sentence"],
+    ["Passive voice", "the subject receives the action"]
+  ]
 }
