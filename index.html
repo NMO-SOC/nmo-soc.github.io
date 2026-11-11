@@ -229,6 +229,27 @@
   .panel:hover{background:#7A2A1D;outline-color:var(--ochre)}
   .panel:focus-visible{background:#7A2A1D;outline:2px solid var(--ink)}
 
+  /* the pigment says which group a tile belongs to */
+  .panel--study{background:var(--blue)}
+  .panel--study:hover,
+  .panel--study:focus-visible{background:#263F5C}
+  .panel--archived,
+  .panel--archived:hover{background:var(--plaster-dim);color:var(--ink);border-color:var(--ink-soft);outline-color:var(--plaster-dim)}
+  .panel--archived .panel-note,
+  .panel--archived .panel-tag{color:var(--ink)}
+  .panel--archived:focus-visible{background:var(--plaster-dim);outline-color:var(--ink)}
+
+  .group + .group{margin-top:clamp(2.25rem,5vw,3rem)}
+  .group-title{
+    font-family:var(--display);
+    font-weight:400;
+    font-size:1rem;
+    letter-spacing:.02em;
+    color:var(--ink-soft);
+    margin:0 0 1.1rem;
+  }
+  .group--archived{border-top:1px solid var(--plaster-dim);padding-top:1.5rem}
+
   /* ================= ratio calculandi ================= */
   .ratio-section{
     margin:clamp(2.75rem,7vw,4rem) auto 0;
@@ -251,7 +272,6 @@
   }
   .ratio-section > summary::-webkit-details-marker{display:none}
   .ratio-section > summary h2{font:inherit;margin:0;letter-spacing:inherit;text-transform:inherit}
-  .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
   .ratio-section > summary::after{content:"  +";color:var(--pompeian)}
   .ratio-section[open] > summary::after{content:"  \2013"}
   .ratio-section > summary:hover,
@@ -311,6 +331,9 @@
     color:var(--ink);
   }
 
+  .ratio.today{margin:0 0 2.5rem}
+  .today dd{font-family:var(--display);font-size:1.05rem;color:var(--ink)}
+
   .ratio-source{
     margin:2.5rem auto 0;
     max-width:52ch;
@@ -360,13 +383,6 @@
   <div class="banner-inner banner-day" role="group" aria-label="Today's date in the Roman calendar">
     <span lang="la" id="roman-date">&mdash;</span>
     <span lang="la"><span id="auc-year">&mdash;</span> A.U.C.</span>
-    <span lang="la" title="The sun's place in the zodiac, reckoned as Pliny and Columella reckoned it, with the equinox falling in the eighth degree of Aries.">Sol <span id="sol-signum">&mdash;</span></span>
-    <span lang="la" id="latin-weekday">&mdash;</span>
-    <span title="Nundinal letter: the eight-day market cycle, lettered A to H from 1 January."><span class="lbl">Nundinae</span><span id="c-nundinae">&mdash;</span></span>
-    <span title="Golden Number: the year's place in the 19-year lunar cycle."><span class="lbl">Aureus Numerus</span><span id="c-aureus">&mdash;</span></span>
-    <span title="Epact: the age of the moon on 1 January. Thirty is written as an asterisk."><span class="lbl">Epacta</span><span id="c-epacta">&mdash;</span></span>
-    <span title="Roman Indiction: a 15-year civil cycle used for dating documents."><span class="lbl">Indictio</span><span id="c-indictio">&mdash;</span></span>
-    <span title="Solar Cycle: the 28-year period after which the weekdays fall on the same dates."><span class="lbl">Cyclus Solaris</span><span id="c-cyclus">&mdash;</span></span>
   </div>
 </header>
 
@@ -381,60 +397,78 @@
   <p class="thesis rise rise-2">Guides, tools and resources for English and Humanities.</p>
   <p class="lede rise rise-2">Built for my classes, and free for anyone else who finds them useful.</p>
 
-  <h2 class="sr-only">Tools</h2>
-  <div class="panels rise rise-3">
+  <div class="rise rise-3">
 
-    <a class="panel" href="https://nmo-soc.github.io/english-2027/" aria-label="English Curriculum Hub" aria-describedby="pn9 pt9">
-      <span class="panel-name">English Curriculum Hub</span>
-      <span class="panel-note" id="pn9">The English curriculum in one place, for planning units, tasks and assessment.</span>
-      <span class="panel-tag" id="pt9">Curriculum</span>
-    </a>
-
+    <section class="group" aria-labelledby="g-teach">
+      <h2 class="group-title" id="g-teach">For teachers</h2>
+      <div class="panels">
     <!-- ===== To add a panel, copy one block from here ===== -->
-    <a class="panel" href="https://nmo-soc.github.io/ars-verbi/" aria-label="VCE English Guide" aria-describedby="pn1 pt1">
-      <span class="panel-name">VCE English Guide</span>
-      <span class="panel-note" id="pn1">Structures, sample paragraphs and metalanguage for text response, comparative and analysing argument.</span>
-      <span class="panel-tag" id="pt1">Units III&ndash;IV</span>
-    </a>
+      <a class="panel" href="https://nmo-soc.github.io/english-2027/" aria-label="English Curriculum Hub" aria-describedby="pn9 pt9">
+        <span class="panel-name">English Curriculum Hub</span>
+        <span class="panel-note" id="pn9">The English curriculum, planned by unit and task.</span>
+        <span class="panel-tag" id="pt9">Curriculum</span>
+      </a>
     <!-- ===== to here, and change the href, name, note and tag ===== -->
 
-    <a class="panel" href="/exam-timer/" aria-label="Assessment Timer" aria-describedby="pn2 pt2">
-      <span class="panel-name">Assessment Timer</span>
-      <span class="panel-note" id="pn2">Reading and writing time on one locked screen, with the start and finish clocks showing.</span>
-      <span class="panel-tag" id="pt2">Exam room</span>
-    </a>
+      <a class="panel" href="/exam-timer/" aria-label="Assessment Timer" aria-describedby="pn2 pt2">
+        <span class="panel-name">Assessment Timer</span>
+        <span class="panel-note" id="pn2">Reading and writing time on one locked screen.</span>
+        <span class="panel-tag" id="pt2">Exam room</span>
+      </a>
 
-    <a class="panel" href="/Developmental-Rubric-Creator/" aria-label="Developmental Rubric Builder" aria-describedby="pn3 pt3">
-      <span class="panel-name">Developmental Rubric Builder</span>
-      <span class="panel-note" id="pn3">Choose the curriculum descriptions a task actually assesses, draft the five levels, and export a rubric Compass will import.</span>
-      <span class="panel-tag" id="pt3">Years VII&ndash;X</span>
-    </a>
+      <a class="panel" href="/Developmental-Rubric-Creator/" aria-label="Developmental Rubric Builder" aria-describedby="pn3 pt3">
+        <span class="panel-name">Developmental Rubric Builder</span>
+        <span class="panel-note" id="pn3">Draft five levels from curriculum descriptions and export to Compass.</span>
+        <span class="panel-tag" id="pt3">Years VII&ndash;X</span>
+      </a>
+      </div>
+    </section>
 
-    <a class="panel" href="/VCE-English-Guide/marker.html" aria-label="Essay Marker" aria-describedby="pn4 pt4">
-      <span class="panel-name">Essay Marker</span>
-      <span class="panel-note" id="pn4">Type an essay in, or photograph handwritten work, and have it marked against the official criteria and expected qualities.</span>
-      <span class="panel-tag" id="pt4">Sections A &middot; B &middot; C</span>
-    </a>
-    <a class="panel" href="/VCE-English-Guide/ask-max.html" aria-label="Ask Max" aria-describedby="pn5 pt5">
-      <span class="panel-name">Ask Max</span>
-      <span class="panel-note" id="pn5">An AI chat-bot made to answer questions regarding Units 3/4 English and the end of year exam.</span>
-      <span class="panel-tag" id="pt5">Study tool</span>
-    </a>
-    <a class="panel" href="/neptune-ocean/" aria-label="Speak the Speech" aria-describedby="pn6 pt6">
-      <span class="panel-name">Speak the Speech</span>
-      <span class="panel-note" id="pn6">An introduction to Shakespearean English: the grammar, a phrase book, a dictionary of common and rare words, and exercises.</span>
-      <span class="panel-tag" id="pt6">Shakespeare</span>
-    </a>
-    <a class="panel" href="/grammarlab/" aria-label="GrammarLab" aria-describedby="pn7 pt7">
-      <span class="panel-name">GrammarLab</span>
-      <span class="panel-note" id="pn7">A graded course in grammar and composition, from the sentence through to style, with a generator for printable worksheets and answer keys.</span>
-      <span class="panel-tag" id="pt7">Lessons I&ndash;LXXV</span>
-    </a>
-    <a class="panel" href="https://github.com/NMO-SOC/Defunct-VCE-English-Guide-MMXXVI" aria-label="VCE English Guide (Defunct)" aria-describedby="pn8 pt8">
-      <span class="panel-name">VCE English Guide (Defunct)</span>
-      <span class="panel-note" id="pn8">The previous edition of the VCE English Guide, kept for reference. It has been superseded by the current guide above.</span>
-      <span class="panel-tag" id="pt8">Archived</span>
-    </a>
+    <section class="group" aria-labelledby="g-study">
+      <h2 class="group-title" id="g-study">For students</h2>
+      <div class="panels">
+      <a class="panel panel--study" href="https://nmo-soc.github.io/ars-verbi/" aria-label="VCE English Guide" aria-describedby="pn1 pt1">
+        <span class="panel-name">VCE English Guide</span>
+        <span class="panel-note" id="pn1">Structures and sample paragraphs for text response and argument.</span>
+        <span class="panel-tag" id="pt1">Units III&ndash;IV</span>
+      </a>
+
+      <a class="panel panel--study" href="/VCE-English-Guide/marker.html" aria-label="Essay Marker" aria-describedby="pn4 pt4">
+        <span class="panel-name">Essay Marker</span>
+        <span class="panel-note" id="pn4">Mark an essay, typed or photographed, against the criteria.</span>
+        <span class="panel-tag" id="pt4">Sections A &middot; B &middot; C</span>
+      </a>
+
+      <a class="panel panel--study" href="/VCE-English-Guide/ask-max.html" aria-label="Ask Max" aria-describedby="pn5 pt5">
+        <span class="panel-name">Ask Max</span>
+        <span class="panel-note" id="pn5">An AI chat-bot for Units 3/4 English and the exam.</span>
+        <span class="panel-tag" id="pt5">Study tool</span>
+      </a>
+
+      <a class="panel panel--study" href="/neptune-ocean/" aria-label="Speak the Speech" aria-describedby="pn6 pt6">
+        <span class="panel-name">Speak the Speech</span>
+        <span class="panel-note" id="pn6">Shakespearean grammar, a phrase book, a dictionary and exercises.</span>
+        <span class="panel-tag" id="pt6">Shakespeare</span>
+      </a>
+
+      <a class="panel panel--study" href="/grammarlab/" aria-label="GrammarLab" aria-describedby="pn7 pt7">
+        <span class="panel-name">GrammarLab</span>
+        <span class="panel-note" id="pn7">A graded course in grammar and composition, with printable worksheets.</span>
+        <span class="panel-tag" id="pt7">Lessons I&ndash;LXXV</span>
+      </a>
+      </div>
+    </section>
+
+    <section class="group group--archived" aria-labelledby="g-archive">
+      <h2 class="group-title" id="g-archive">Archived</h2>
+      <div class="panels">
+      <a class="panel panel--archived" href="https://github.com/NMO-SOC/Defunct-VCE-English-Guide-MMXXVI" aria-label="VCE English Guide (Defunct)" aria-describedby="pn8 pt8">
+        <span class="panel-name">VCE English Guide (Defunct)</span>
+        <span class="panel-note" id="pn8">The previous edition, kept for reference. Superseded by the guide above.</span>
+        <span class="panel-tag" id="pt8">Archived</span>
+      </a>
+      </div>
+    </section>
   </div>
 
   <details class="ratio-section">
@@ -444,6 +478,15 @@
     <p class="ratio-intro" lang="en">Nothing in the banner above is typed in. It is all worked out in the browser from today's date, like so.</p>
 
     <button class="lang-toggle" id="lang-toggle" type="button">English</button>
+
+    <dl class="ratio today">
+      <div><dt>Sol in signo</dt><dd lang="la"><span id="sol-signum">&mdash;</span></dd></div>
+      <div><dt>Nundinae</dt><dd><span id="c-nundinae">&mdash;</span></dd></div>
+      <div><dt>Aureus Numerus</dt><dd><span id="c-aureus">&mdash;</span></dd></div>
+      <div><dt>Epacta</dt><dd><span id="c-epacta">&mdash;</span></dd></div>
+      <div><dt>Indictio</dt><dd><span id="c-indictio">&mdash;</span></dd></div>
+      <div><dt>Cyclus Solaris</dt><dd><span id="c-cyclus">&mdash;</span></dd></div>
+    </dl>
 
     <dl class="ratio">
       <div>
